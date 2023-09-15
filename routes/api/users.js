@@ -1,39 +1,14 @@
-const express = require('express');
+const express = require("express");
+const { validateBody } = require("../../middlewares");
+const { shemas } = require("../../models/user");
+const { ctrl } = require("../../controllers/users");
 
 const router = express.Router();
 
-const {
-  validation,
-  ctrlWrapper,
-  auth
-} = require('../../middlewares');
-
-const { joiRegisterSchema } = require('../../models/user');
-
-const { users: ctrl } = require('../../controllers');
-
 // registration
-router.post(
-  '/register',
-  validation(joiRegisterSchema),
-  ctrlWrapper(ctrl.register)
-);
-
-// current
-router.get(
-  '/current',
-  auth,
-  ctrlWrapper(ctrl.getCurrent));
+router.post("/register", validateBody(shemas.registerSchema), ctrl.register);
 
 // login
-router.post(
-  '/login',
-  validation(joiRegisterSchema),
-  ctrlWrapper(ctrl.login));
-
-//  logout
-router.post('/logout',
-  auth,
-  ctrlWrapper(ctrl.logout));
+router.post("/login", validateBody(shemas.loginShema), ctrl.login);
 
 module.exports = router;
