@@ -1,7 +1,7 @@
-const { HttpError, ctrWrapper } = require("../helpers");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { User } = require("../../models/user");
+const { HttpError, ctrWrapper } = require("../../helpers");
 
 const { SECRET_KEY } = process.env;
 
