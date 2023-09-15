@@ -1,12 +1,11 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const { handleMongooseError } = require("../helpers");
-// const bcrypt = require("bcryptjs");
 
 const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 const passwordRegex = /^(?=.*[a-zA-Z]{6})(?=.*\d)[a-zA-Z\d]{7}$/;
 
-const userSchema = Schema(
+const userSchema = new Schema(
   {
     name: {
       type: String,
@@ -39,7 +38,7 @@ const userSchema = Schema(
 userSchema.post("save", handleMongooseError);
 
 const registerSchema = Joi.object({
-  name: Joi.string().required().message({
+  name: Joi.string().required().messages({
     "any.required": `Missing required name field`,
   }),
   email: Joi.string().required().pattern(emailRegex).messages({
