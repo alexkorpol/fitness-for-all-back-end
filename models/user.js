@@ -13,7 +13,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      match: passwordRegex,
+      match: emailRegex,
       required: [true, "Password is required"],
     },
     email: {
@@ -22,15 +22,6 @@ const userSchema = new Schema(
       required: [true, "Email is required"],
       unique: true,
     },
-    // subscription: {
-    //   type: String,
-    //   enum: ["starter", "pro", "business"],
-    //   default: "starter",
-    // },
-    token: {
-      type: String,
-      default: null,
-    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -38,36 +29,32 @@ const userSchema = new Schema(
 userSchema.post("save", handleMongooseError);
 
 const registerSchema = Joi.object({
-  name: Joi.string().required().messages({
-    "any.required": `Missing required name field`,
-  }),
-  email: Joi.string().required().pattern(emailRegex).messages({
-    "any.required": `Missing required email field`,
-  }),
-  password: Joi.string().required().pattern(passwordRegex).messages({
-    "any.required": `Missing required password field`,
-  }),
+  name: Joi.string()
+    .required()
+    .message({ "any.required": `Missing required name field` }),
+  email: Joi.string()
+    .pattern(emailRegex)
+    .required()
+    .message({ "any.required": `Missing required email field` }),
+  password: Joi.string()
+    .pattern(passwordRegex)
+    .required()
+    .message({ "any.required": `Missing required password field` }),
 });
-
-// const emailShema = Joi.object({
-//   email: Joi.string().required().pattern(emailRegex).messages({
-//     "any.required": `Missing required email field`,
-//   }),
-// });
-
 const loginSchema = Joi.object({
-  email: Joi.string().required().pattern(emailRegex).messages({
-    "any.required": `Missing required email field`,
-  }),
-  password: Joi.string().required().pattern(passwordRegex).messages({
-    "any.required": `Missing required password field`,
-  }),
+  email: Joi.string()
+    .pattern(emailRegex)
+    .required()
+    .message({ "any.required": `Missing required email field` }),
+  password: Joi.string()
+    .pattern(passwordRegex)
+    .required()
+    .message({ "any.required": `Missing required password field` }),
 });
 const schemas = {
   registerSchema,
   loginSchema,
 };
-
 const User = model("user", userSchema);
 
 module.exports = {
