@@ -5,6 +5,11 @@ const bcrypt = require("bcryptjs");
 const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 const passwordRegex = /^(?=.*[a-zA-Z]{6})(?=.*\d)[a-zA-Z\d]{7}$/;
 
+//проверка на соответствие пароля регулярному выражению:
+// const str = "Quei123";
+// const result = passwordRegex.test(str);
+// console.log(result);
+
 const userSchema = Schema(
   {
     name: {
