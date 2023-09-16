@@ -17,6 +17,7 @@ const userSchema = Schema(
     },
     email: {
       type: String,
+      match: emailRegex,
       required: [true, "Email is required"],
       unique: true,
     },
@@ -40,14 +41,14 @@ const joiRegisterSchema = Joi.object({
   name: Joi.string()
     .required()
     .messages({ "string.empty": "Missing required name field" }),
-  email: Joi.string()
-    .pattern(emailRegex)
-    .required()
-    .messages({ "object.pattern.match": "Missing required email field" }),
-  password: Joi.string()
-
-    .required()
-    .messages({ "object.pattern.match": "Missing required password field" }),
+  email: Joi.string().pattern(emailRegex).required().messages({
+    "object.pattern.match":
+      "It expects a string that starts with one or more word characters, followed by the '@' symbol, followed by one or more characters (letters or underscores), and finally, a top-level domain (TLD) of two or three letters.",
+  }),
+  password: Joi.string().pattern(passwordRegex).required().messages({
+    "object.pattern.match":
+      "The entire string must consist of 7 characters, which can be letters in uppercase or lowercase and/or digits.",
+  }),
 });
 
 const User = model("user", userSchema);
