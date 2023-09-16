@@ -31,25 +31,25 @@ userSchema.post("save", handleMongooseError);
 const registerSchema = Joi.object({
   name: Joi.string()
     .required()
-    .message({ "any.required": `Missing required name field` }),
+    .messages({ "string.empty": "Missing required name field" }),
   email: Joi.string()
     .pattern(emailRegex)
     .required()
-    .message({ "any.required": `Missing required email field` }),
+    .messages({ "object.pattern.match": "Missing required email field" }),
   password: Joi.string()
     .pattern(passwordRegex)
     .required()
-    .message({ "any.required": `Missing required password field` }),
+    .messages({ "object.pattern.match": "Missing required password field" }),
 });
 const loginSchema = Joi.object({
   email: Joi.string()
     .pattern(emailRegex)
     .required()
-    .message({ "any.required": `Missing required email field` }),
+    .messages({ "object.pattern.match": "Missing required email field" }),
   password: Joi.string()
     .pattern(passwordRegex)
     .required()
-    .message({ "any.required": `Missing required password field` }),
+    .messages({ "object.pattern.match": "Missing required password field" }),
 });
 const schemas = {
   registerSchema,

@@ -1,6 +1,7 @@
 const express = require("express");
 const { validation } = require("../../middlewares");
 const { schemas } = require("../../models/user");
+// const controllers = require("../../controllers/auth/register");
 
 const router = express.Router();
 
@@ -8,9 +9,6 @@ const router = express.Router();
 
 router.post("/register", validation(schemas.registerSchema));
 module.exports = router;
-
-// // // registration
-// // router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
 
 // // login
 // router.post("/login", validateBody(schemas.loginSchema), сtrl.login);
