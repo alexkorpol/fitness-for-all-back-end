@@ -1,11 +1,11 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-const { handleMongooseError } = require("../helpers");
+const bcrypt = require("bcryptjs");
 
 const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 const passwordRegex = /^(?=.*[a-zA-Z]{6})(?=.*\d)[a-zA-Z\d]{7}$/;
 
-const userSchema = new Schema(
+const userSchema = Schema(
   {
     name: {
       type: String,
@@ -13,7 +13,6 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      match: emailRegex,
       required: [true, "Password is required"],
     },
     email: {
@@ -22,42 +21,39 @@ const userSchema = new Schema(
       required: [true, "Email is required"],
       unique: true,
     },
+    token: {
+      type: String,
+      default: null,
+    },
   },
   { versionKey: false, timestamps: true }
 );
 
-userSchema.post("save", handleMongooseError);
+userSchema.methods.setPassword = function (password) {
+  this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+};
 
-const registerSchema = Joi.object({
+userSchema.methods.comparePassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
+
+const joiRegisterSchema = Joi.object({
   name: Joi.string()
     .required()
     .messages({ "string.empty": "Missing required name field" }),
-  email: Joi.string()
-    .pattern(emailRegex)
-    .required()
-    .messages({ "object.pattern.match": "Missing required email field" }),
-  password: Joi.string()
-    .pattern(passwordRegex)
-    .required()
-    .messages({ "object.pattern.match": "Missing required password field" }),
+  email: Joi.string().pattern(emailRegex).required().messages({
+    "object.pattern.match":
+      "It expects a string that starts with one or more word characters, followed by the '@' symbol, followed by one or more characters (letters or underscores), and finally, a top-level domain (TLD) of two or three letters.",
+  }),
+  password: Joi.string().pattern(passwordRegex).required().messages({
+    "object.pattern.match":
+      "The entire string must consist of 7 characters, which can be letters in uppercase or lowercase and/or digits.",
+  }),
 });
-const loginSchema = Joi.object({
-  email: Joi.string()
-    .pattern(emailRegex)
-    .required()
-    .messages({ "object.pattern.match": "Missing required email field" }),
-  password: Joi.string()
-    .pattern(passwordRegex)
-    .required()
-    .messages({ "object.pattern.match": "Missing required password field" }),
-});
-const schemas = {
-  registerSchema,
-  loginSchema,
-};
+
 const User = model("user", userSchema);
 
 module.exports = {
   User,
-  schemas,
+  joiRegisterSchema,
 };
