@@ -42,19 +42,19 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Registration's object",
+          "description": " Oпис параматрів запиту: **username** -string, ім'я користувача. **email**-string електронна пошта користувача. **password**-string зашифрований пароль.всі поля є обов'язковими. ",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationRequest"
+                "$ref": "#/components/schemas/SignIn"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Successful operation",
+            "description": "Oпис параматрів відповіді: **token**-string використовується для зберігання стану авторизації користувача в системі, дозволяє здийснювати захищені запити до API.Токен є довільним рядком символів і генерується при кожній новій авторизації коритувача.., **name**-string ім'я користувача, **email**-string  електронна пошта користувача",
             "content": {
               "application/json": {
                 "schema": {
@@ -80,15 +80,57 @@
         }
       }
     },
+    "/users/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User Logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": " Опис параметрів запиту: **email**-string, required, улуктронна пошта користувача, обов'язковий параметр. **password**-string, required, зашифрований пароль користувача, обо'язковий параметр",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Oпис параматрів відповіді: **token**-string використовується для зберігання стану авторизації користувача в системі, дозволяє здийснювати захищені запити до API.Токен є довільним рядком символів і генерується при кожній новій авторизації коритувача..,  **email**-string  електронна пошта користувача",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/current": {
       "get": {
         "tags": ["User"],
         "summary": "Get current user info",
         "parameters": [],
         "security": [{ "Bearer": [] }],
+        "description": " Ендпоінт логауту - це механізм виходу з системи, який припиняє дію сесії користувача та знищує токен доступу, що був виданий при попередній аутентифікації.Опис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /users/logoutз валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.",
         "responses": {
           "200": {
-            "description": "Logged user returned",
+            "description": "JSON-об'єкт, який містить інформацію про поточного авторизованого користувача. Oпис параматрів відповіді:**id** - ObjectId, унікальний ідентифікатор користувача **name** - string, ім'я користувача. **email** - string, електронна пошта користувача.",
             "content": {
               "application/json": {
                 "schema": {
@@ -109,11 +151,52 @@
           }
         }
       }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Signs out user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Ендпоінт логауту - це механізм виходу з системи, який припиняє дію сесії користувача та знищує токен доступу, що був виданий при попередній аутентифікації.  Опис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /users/logout з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Signs out user"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "User signed out - успішний вихід з системи",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Signs out user"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - невалідний токен - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "RegistrationRequest": {
+      "SignIn": {
         "type": "object",
         "required": ["name", "password", "email"],
         "properties": {
@@ -130,7 +213,23 @@
           "email": {
             "type": "string",
             "description": "User's email",
-            "example": "mark@gmail.com"
+            "format": "email"
+          }
+        }
+      },
+      "SignInDto": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Markqwe*1234567"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
           }
         }
       },
@@ -138,16 +237,16 @@
         "type": "object",
         "required": ["user", "token"],
         "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
+          },
           "user": {
             "type": "object",
             "description": "User's object",
-            "required": ["id", "name", "email"],
+            "required": ["name", "email"],
             "properties": {
-              "id": {
-                "type": "string",
-                "description": "User's id",
-                "example": "6505c930cd6008416cdfd45f"
-              },
               "name": {
                 "type": "string",
                 "description": "User's name",
@@ -156,14 +255,32 @@
               "email": {
                 "type": "string",
                 "description": "User's email",
-                "example": "mark@gmail.com"
+                "format": "email"
               }
             }
-          },
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["user", "token"],
+        "properties": {
           "token": {
             "type": "string",
             "description": "User's token",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
+          },
+          "user": {
+            "type": "object",
+            "description": "User's object",
+            "required": ["email"],
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              }
+            }
           }
         }
       },
@@ -212,6 +329,9 @@
             "example": "Authentication failed. Please log in."
           }
         }
+      },
+      "Signs out user": {
+        "type": "object"
       }
     }
   },
