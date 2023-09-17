@@ -50,7 +50,7 @@ const joiRegisterSchema = Joi.object({
     "object.pattern.match":
       "It expects a string that starts with one or more word characters, followed by the '@' symbol, followed by one or more characters (letters or underscores), and finally, a top-level domain (TLD) of two or three letters.",
   }),
-  password: Joi.string().pattern(passwordRegex).required().messages({
+  password: Joi.string().required().messages({
     "object.pattern.match":
       "The entire string must consist of 7 characters, which can be letters in uppercase or lowercase and/or digits.",
   }),
