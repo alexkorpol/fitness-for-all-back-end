@@ -1,0 +1,225 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "Power Pulse API docs",
+    "description": "API documentation for project Power Pulse",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json", "multipart/form-data"],
+  "servers": [{ "url": "http://localhost:3000" }],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User endpoints"
+    },
+    {
+      "name": "Product",
+      "description": "Product endpoints"
+    },
+    {
+      "name": "Exercise",
+      "description": "Exercise endpoints"
+    },
+    {
+      "name": "Diary",
+      "description": "Diary endpoints"
+    }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User with such email already exists",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get current user info",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Logged user returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["name", "password", "email"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Mark"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Markqwe*1234567"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "mark@gmail.com"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "required": ["user", "token"],
+        "properties": {
+          "user": {
+            "type": "object",
+            "description": "User's object",
+            "required": ["id", "name", "email"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "6505c930cd6008416cdfd45f"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name",
+                "example": "Mark"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "example": "mark@gmail.com"
+              }
+            }
+          },
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
+          }
+        }
+      },
+      "BadRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Bad request"
+          }
+        }
+      },
+      "CurrentResponse": {
+        "type": "object",
+        "required": ["id", "name", "email"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "6505c930cd6008416cdfd45f"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Mark"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "mark@gmail.com"
+          }
+        }
+      },
+      "AuthenticationFailed": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Description of the error",
+            "example": "Authentication failed. Please log in."
+          }
+        }
+      }
+    }
+  },
+  "securitySchemes": {
+    "Bearer": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  }
+}
