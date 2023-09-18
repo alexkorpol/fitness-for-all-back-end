@@ -11,7 +11,10 @@
   },
   "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json", "multipart/form-data"],
-  "servers": [{ "url": "http://localhost:3000" }],
+  "servers": [
+    { "url": "http://localhost:3000" },
+    { "url": "https://fitness-for-all-back-end.onrender.com" }
+  ],
   "tags": [
     {
       "name": "Auth",
@@ -42,7 +45,7 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": " Oпис параматрів запиту: **username** -string, ім'я користувача. **email**-string електронна пошта користувача. **password**-string зашифрований пароль.всі поля є обов'язковими. ",
+          "description": "Oпис параматрів запиту: **username** -string, ім'я користувача. **email**-string електронна пошта користувача. **password**-string зашифрований пароль має мітити 6 літер в різному регістрі і принаймні одну цифру та бути довжиною 7 символів.всі поля є обов'язковими. ",
           "required": true,
           "content": {
             "application/json": {
@@ -208,7 +211,7 @@
           "password": {
             "type": "string",
             "description": "User's password",
-            "example": "Markqwe*1234567"
+            "example": "Markqw7"
           },
           "email": {
             "type": "string",
