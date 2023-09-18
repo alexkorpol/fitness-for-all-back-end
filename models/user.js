@@ -3,7 +3,7 @@ const Joi = require("joi");
 const bcrypt = require("bcryptjs");
 
 const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-const passwordRegex = /^(?=.*[a-zA-Z]{6})(?=.*\d)[a-zA-Z\d]{7}$/;
+const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,}/;
 
 //проверка на соответствие пароля регулярному выражению:
 // const str = "Quei123";
@@ -18,6 +18,7 @@ const userSchema = Schema(
     },
     password: {
       type: String,
+      match: passwordRegex,
       required: [true, "Password is required"],
     },
     email: {
@@ -47,18 +48,29 @@ const joiRegisterSchema = Joi.object({
     .required()
     .messages({ "string.empty": "Missing required name field" }),
   email: Joi.string().pattern(emailRegex).required().messages({
-    "object.pattern.match":
+    "string.pattern.base":
       "It expects a string that starts with one or more word characters, followed by the '@' symbol, followed by one or more characters (letters or underscores), and finally, a top-level domain (TLD) of two or three letters.",
   }),
-  password: Joi.string().required().messages({
-    "object.pattern.match":
-      "The entire string must consist of 7 characters, which can be letters in uppercase or lowercase and/or digits.",
+  password: Joi.string().pattern(passwordRegex).required().messages({
+    "string.pattern.base":
+      "Must contain at least one number, one capital and one small letter of the Latin alphabet and be at least 7 characters long.",
   }),
 });
 
+const joiLoginSchema = Joi.object({
+  email: Joi.string().pattern(emailRegex).required().messages({
+    "string.pattern.base":
+      "It expects a string that starts with one or more word characters, followed by the '@' symbol, followed by one or more characters (letters or underscores), and finally, a top-level domain (TLD) of two or three letters.",
+  }),
+  password: Joi.string().pattern(passwordRegex).required().messages({
+    "string.pattern.base":
+      "Must contain at least one number, one capital and one small letter of the Latin alphabet and be at least 7 characters long.",
+  }),
+});
 const User = model("user", userSchema);
 
 module.exports = {
   User,
   joiRegisterSchema,
+  joiLoginSchema,
 };
