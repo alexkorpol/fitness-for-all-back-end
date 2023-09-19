@@ -10,6 +10,45 @@ const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,}/;
 // const result = passwordRegex.test(str);
 // console.log(result);
 
+const dataSchema = Schema({
+  height: {
+    type: Number,
+    required: true,
+  },
+  currentWeight: {
+    type: Number,
+    required: true,
+  },
+  desiredWeight: {
+    type: Number,
+    required: true,
+  },
+  birthday: {
+    type: Date,
+    required: true,
+  },
+  blood: {
+    type: Number,
+    required: true,
+  },
+  sex: {
+    type: String,
+    required: true,
+  },
+  levelActivity: {
+    type: Number,
+    required: true,
+  },
+  dailyRateCalories: {
+    type: Number,
+    required: true,
+  },
+  dailySportMin: {
+    type: Number,
+    required: true,
+  },
+});
+
 const userSchema = Schema(
   {
     name: {
@@ -30,6 +69,10 @@ const userSchema = Schema(
     token: {
       type: String,
       default: null,
+    },
+    bodyData: {
+      type: Object,
+      default: {},
     },
   },
   { versionKey: false, timestamps: true }
@@ -67,10 +110,24 @@ const joiLoginSchema = Joi.object({
       "Must contain at least one number, one capital and one small letter of the Latin alphabet and be at least 7 characters long.",
   }),
 });
+
+const joiUserParamsSchema = Joi.object({
+  height: Joi.number().required(),
+  currentWeight: Joi.number().required(),
+  desiredWeight: Joi.number().required(),
+  birthday: Joi.date().required(),
+  blood: Joi.number().required(),
+  sex: Joi.string().required(),
+  levelActivity: Joi.number().required(),
+});
+
 const User = model("user", userSchema);
+const UserData = model("userData", dataSchema);
 
 module.exports = {
   User,
+  UserData,
   joiRegisterSchema,
   joiLoginSchema,
+  joiUserParamsSchema,
 };

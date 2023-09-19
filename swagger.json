@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "version": "1.0.0",
+    "version": "1.0.2",
     "title": "Power Pulse API docs",
     "description": "API documentation for project Power Pulse",
     "license": {
@@ -43,7 +43,6 @@
         "tags": ["Auth"],
         "summary": "User registration",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "Oпис параматрів запиту: **username** -string, ім'я користувача. **email**-string електронна пошта користувача. **password**-string зашифрований пароль має мітити 6 літер в різному регістрі і принаймні одну цифру та бути довжиною 7 символів.всі поля є обов'язковими. ",
           "required": true,
@@ -88,7 +87,6 @@
         "tags": ["Auth"],
         "summary": "User Logout",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": " Опис параметрів запиту: **email**-string, required, улуктронна пошта користувача, обов'язковий параметр. **password**-string, required, зашифрований пароль користувача, обо'язковий параметр",
           "required": true,
@@ -211,12 +209,12 @@
           "password": {
             "type": "string",
             "description": "User's password",
-            "example": "Markqw7"
+            "example": "Markqw1"
           },
           "email": {
             "type": "string",
             "description": "User's email",
-            "format": "email"
+            "example": "mark@example.com"
           }
         }
       },
@@ -227,12 +225,12 @@
           "password": {
             "type": "string",
             "description": "User's password",
-            "example": "Markqwe*1234567"
+            "example": "Markqw1"
           },
           "email": {
             "type": "string",
             "description": "User's email",
-            "format": "email"
+            "example": "mark@example.com"
           }
         }
       },
