@@ -5,49 +5,12 @@ const bcrypt = require("bcryptjs");
 const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,}/;
 
+const maxDate = new Date(new Date() - 568036800000);
+
 //проверка на соответствие пароля регулярному выражению:
 // const str = "Quei123";
 // const result = passwordRegex.test(str);
 // console.log(result);
-
-const dataSchema = Schema({
-  height: {
-    type: Number,
-    required: true,
-  },
-  currentWeight: {
-    type: Number,
-    required: true,
-  },
-  desiredWeight: {
-    type: Number,
-    required: true,
-  },
-  birthday: {
-    type: Date,
-    required: true,
-  },
-  blood: {
-    type: Number,
-    required: true,
-  },
-  sex: {
-    type: String,
-    required: true,
-  },
-  levelActivity: {
-    type: Number,
-    required: true,
-  },
-  dailyRateCalories: {
-    type: Number,
-    required: true,
-  },
-  dailySportMin: {
-    type: Number,
-    required: true,
-  },
-});
 
 const userSchema = Schema(
   {
@@ -66,13 +29,49 @@ const userSchema = Schema(
       required: [true, "Email is required"],
       unique: true,
     },
+    avatarURL: { type: String, default: null },
     token: {
       type: String,
       default: null,
     },
     bodyData: {
-      type: Object,
-      default: {},
+      height: {
+        type: Number,
+        min: [140, "Height must be greater than or equal to 140"],
+      },
+      currentWeight: {
+        type: Number,
+        min: [40, "Current weight must be greater than or equal to 40"],
+      },
+      desiredWeight: {
+        type: Number,
+        min: [35, "Current weight must be greater than or equal to 35"],
+      },
+      birthday: { type: Date },
+      blood: {
+        type: Number,
+        enum: {
+          values: [1, 2, 3, 4],
+        },
+      },
+      sex: {
+        type: String,
+        enum: {
+          values: ["male", "female"],
+        },
+      },
+      levelActivity: {
+        type: Number,
+        enum: {
+          values: [1, 2, 3, 4, 5],
+        },
+      },
+    },
+    dailyRateCalories: {
+      type: Number,
+    },
+    dailySportMin: {
+      type: Number,
     },
   },
   { versionKey: false, timestamps: true }
@@ -112,21 +111,50 @@ const joiLoginSchema = Joi.object({
 });
 
 const joiUserParamsSchema = Joi.object({
-  height: Joi.number().required(),
-  currentWeight: Joi.number().required(),
-  desiredWeight: Joi.number().required(),
-  birthday: Joi.date().required(),
-  blood: Joi.number().required(),
-  sex: Joi.string().required(),
-  levelActivity: Joi.number().required(),
+  height: Joi.number().integer().min(140).required().messages({
+    "number.base": "Height must be a number",
+    "number.integer": "Height must be an integer",
+    "number.min": "Height must be greater than or equal to 140",
+    "any.required": "Height is a required field",
+  }),
+  currentWeight: Joi.number().integer().min(40).required().messages({
+    "number.base": "Current weight must be a number",
+    "number.integer": "Current weight must be an integer",
+    "number.min": "Current weight must be greater than or equal to 40",
+    "any.required": "Current weight is a required field",
+  }),
+  desiredWeight: Joi.number().integer().min(35).required().messages({
+    "number.base": "Desired weight must be a number",
+    "number.integer": "Desired weight must be an integer",
+    "number.min": "Desired weight must be greater than or equal to 35",
+    "any.required": "Desired weight is a required field",
+  }),
+  birthday: Joi.date().max(maxDate).iso().required().messages({
+    "date.format": "Please enter a valid date 'YYYY-mm-dd' ",
+    "date.max": "You must be 18 years old",
+    "any.required": "Date is a required field",
+  }),
+  blood: Joi.number().valid(1, 2, 3, 4).required().messages({
+    "number.base": "Blood must be a number",
+    "any.only": "Blood should be in the range 1-4",
+    "any.required": "Blood is a required field",
+  }),
+  sex: Joi.string().valid("male", "female").required().messages({
+    "string.base": "Sex must be a string",
+    "any.only": "Sex should be 'male' or 'female'",
+    "any.required": "Sex is a required field",
+  }),
+  levelActivity: Joi.number().valid(1, 2, 3, 4, 5).required().messages({
+    "number.base": "Level activity must be a number",
+    "any.only": "Level activity should be in the range 1-5",
+    "any.required": "Level activity is a required field",
+  }),
 });
 
 const User = model("user", userSchema);
-const UserData = model("userData", dataSchema);
 
 module.exports = {
   User,
-  UserData,
   joiRegisterSchema,
   joiLoginSchema,
   joiUserParamsSchema,
