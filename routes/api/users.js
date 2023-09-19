@@ -8,6 +8,7 @@ const {
   joiRegisterSchema,
   joiLoginSchema,
   joiUserParamsSchema,
+  joiUpdateParamsSchema,
 } = require("../../models/user");
 
 const { users: ctrl } = require("../../controllers");
@@ -34,6 +35,14 @@ router.post(
   auth,
   validation(joiUserParamsSchema),
   ctrlWrapper(ctrl.userParams)
+);
+
+//  updateParams
+router.patch(
+  "/update",
+  auth,
+  validation(joiUpdateParamsSchema),
+  ctrlWrapper(ctrl.updateParams)
 );
 
 module.exports = router;

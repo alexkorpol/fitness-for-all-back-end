@@ -3,6 +3,7 @@ const login = require("./login");
 const getCurrent = require("./getCurrent");
 const logout = require("./logout");
 const userParams = require("./userParams");
+const updateParams = require("./updateParams");
 
 module.exports = {
   register,
@@ -10,4 +11,5 @@ module.exports = {
   getCurrent,
   logout,
   userParams,
+  updateParams,
 };
