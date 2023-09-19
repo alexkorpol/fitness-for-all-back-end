@@ -1,6 +1,6 @@
 const { User } = require("../../models");
 
-const userParams = async (req, res) => {
+const updateParams = async (req, res) => {
   const { height, desiredWeight, birthday, sex, levelActivity } = req.body;
 
   const coefficient = {
@@ -46,18 +46,7 @@ const userParams = async (req, res) => {
     bodyData,
   });
 
-  res.status(201).json({ bodyData });
+  res.json({ bodyData });
 };
 
-module.exports = userParams;
-
-// пример тела запроса
-// {
-// "height": 180,
-// "currentWeight": 90,
-// "desiredWeight": 60,
-// "birthday": "2005-06-17T07:27:41.902Z",
-// "blood": 3,
-// "sex": "female",
-// "levelActivity": 2
-// }
+module.exports = updateParams;
