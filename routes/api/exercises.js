@@ -1,12 +1,14 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
 // const { joiExerciseSchema } = require("../../models/exercise");
 
-const { ctrlWrapper, auth } = require("../../middlewares");
+const { auth } = require('../../middlewares');
 
-const { getAllExercises } = require("../../controllers/exercises");
+const { ctrlWrapper } = require('../../helpers');
 
-router.get("/", auth, ctrlWrapper(getAllExercises));
+const { getAllExercises } = require('../../controllers/exercises');
+
+router.get('/', auth, ctrlWrapper(getAllExercises));
 
 module.exports = router;
