@@ -1,4 +1,4 @@
-const getDay = require('./day');
+const { getDay } = require('./day');
 const { addExerciseToDay, removeExercise } = require('./exercises');
 const { addProductToDay, removeProduct } = require('./products');
 

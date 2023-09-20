@@ -1,6 +1,6 @@
 const { Day } = require('../../models');
 const moment = require('moment');
-const { HttpError } = require('../../Helpers');
+const { HttpError, ctrlWrapper } = require('../../helpers');
 
 const getDay = async (req, res) => {
     const { date } = req.params;
@@ -15,4 +15,4 @@ const getDay = async (req, res) => {
     res.json(day);
 };
 
-module.exports = getDay;
+module.exports = { getDay: ctrlWrapper(getDay) };
