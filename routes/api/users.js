@@ -2,13 +2,13 @@ const express = require("express");
 
 const router = express.Router();
 
-const { validation, ctrlWrapper, auth } = require("../../middlewares");
+const { validation, auth } = require("../../middlewares");
+const { ctrlWrapper } = require("../../helpers");
 
 const {
   joiRegisterSchema,
   joiLoginSchema,
   joiUserParamsSchema,
-  joiUpdateParamsSchema,
 } = require("../../models/user");
 
 const { users: ctrl } = require("../../controllers");
@@ -41,7 +41,7 @@ router.post(
 router.patch(
   "/update",
   auth,
-  validation(joiUpdateParamsSchema),
+  validation(joiUserParamsSchema),
   ctrlWrapper(ctrl.updateParams)
 );
 
