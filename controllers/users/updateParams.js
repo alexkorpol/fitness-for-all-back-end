@@ -1,15 +1,22 @@
 const { User } = require("../../models");
-const calculateLifeStyle = require("../../helpers/calculateLifeStyle.js");
+const { calculateLifeStyle } = require("../../helpers");
 
 const updateParams = async (req, res) => {
   const { _id } = req.user;
   const dailyRateCalories = calculateLifeStyle(req.body);
   const dailySportMin = 110;
-  const newUser = await User.findByIdAndUpdate(_id, {
-    bodyData: { ...req.body },
-    dailyRateCalories,
-    dailySportMin,
-  });
+  const newUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      bodyData: { ...req.body },
+      dailyRateCalories,
+      dailySportMin,
+    },
+    {
+      new: true,
+      select: "-_id -createdAt -updatedAt -password",
+    }
+  );
 
   res.json(newUser);
 };

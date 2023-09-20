@@ -10,7 +10,7 @@
     }
   },
   "consumes": ["application/json", "multipart/form-data"],
-  "produces": ["application/json", "multipart/form-data"],
+  "produces": ["application/json"],
   "servers": [
     { "url": "http://localhost:3000" },
     { "url": "https://fitness-for-all-back-end.onrender.com" }
@@ -85,7 +85,7 @@
     "/users/login": {
       "post": {
         "tags": ["Auth"],
-        "summary": "User Logout",
+        "summary": "User Login",
         "parameters": [],
         "requestBody": {
           "description": " Опис параметрів запиту: **email**-string, required, улуктронна пошта користувача, обов'язковий параметр. **password**-string, required, зашифрований пароль користувача, обо'язковий параметр",
@@ -128,7 +128,9 @@
         "summary": "Get current user info",
         "parameters": [],
         "security": [{ "Bearer": [] }],
+
         "description": " Ендпоінт current використовується для отримання інформації про поточного авторизованого користувача. Цей ендпоінт повертає об'єкт, який містить інформацію про користувача, таку як ім'я, електронна пошта, ідентифікатор користувача тощо.Параметри: відсутні. Опис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /api/auth/sign-out з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.",
+
         "responses": {
           "200": {
             "description": "JSON-об'єкт, який містить інформацію про поточного авторизованого користувача. Oпис параматрів відповіді:**id** - ObjectId, унікальний ідентифікатор користувача **name** - string, ім'я користувача. **email** - string, електронна пошта користувача.",
@@ -187,6 +189,128 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/params": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create User data",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Create user's object-data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation, user  data created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/update": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update User data",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Update user's object-data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation, user data updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
                 }
               }
             }
@@ -302,22 +426,109 @@
       },
       "CurrentResponse": {
         "type": "object",
-        "required": ["id", "name", "email"],
+        "required": ["user", "token"],
         "properties": {
-          "id": {
+          "token": {
             "type": "string",
-            "description": "User's id",
-            "example": "6505c930cd6008416cdfd45f"
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
           },
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "Mark"
-          },
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "example": "mark@gmail.com"
+          "user": {
+            "type": "object",
+            "description": "User's info",
+            "required": [
+              "_id",
+              "name",
+              "email",
+              "avatar",
+              "dailyTime",
+              "dailyСalories",
+              "bodyParameters"
+            ],
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "6505c930cd6008416cdfd45f"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name",
+                "example": "Mark"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "example": "mark@gmail.com"
+              },
+              "avatar": {
+                "type": "string",
+                "description": "User's avatar"
+              },
+              "dailyTime": {
+                "type": "integer",
+                "description": "User's dailyTime",
+                "example": 110
+              },
+              "dailyСalories": {
+                "type": "integer",
+                "description": "User's dailyTime",
+                "example": 2200
+              },
+              "bodyParameters": {
+                "type": "object",
+                "description": "User's bodyParameters",
+                "required": [
+                  "height",
+                  "currentWeight",
+                  "desiredWeight",
+                  "birthday",
+                  "blood",
+                  "sex",
+                  "levelActivity"
+                ],
+                "properties": {
+                  "height": {
+                    "type": "integer",
+                    "description": "User's height",
+                    "example": 150
+                  },
+                  "currentWeight": {
+                    "type": "integer",
+                    "description": "User's currentWeight",
+                    "example": 35
+                  },
+                  "desiredWeight": {
+                    "type": "integer",
+                    "description": "User's currentWeight",
+                    "example": 35
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "description": "User's birthday",
+                    "example": "2005-06-17T07:27:41.902Z"
+                  },
+                  "blood": {
+                    "type": "integer",
+                    "description": "User's blood",
+                    "enum": [1, 2, 3, 4],
+                    "example": 3
+                  },
+                  "sex": {
+                    "type": "string",
+                    "description": "User's sex",
+                    "enum": ["male", "female"],
+                    "example": "female"
+                  },
+                  "levelActivity": {
+                    "type": "integer",
+                    "description": "User's levelActivity",
+                    "enum": [1, 2, 3, 4, 5],
+                    "example": 2
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -333,6 +544,78 @@
       },
       "Signs out user": {
         "type": "object"
+      },
+      "ErrorNotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Not Found"
+          }
+        }
+      },
+      "SuccessfulCreateResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "User data was created successful"
+          }
+        }
+      },
+      "CreateUserDataRequest": {
+        "type": "object",
+        "required": [
+          "height",
+          "currentWeight",
+          "desiredWeight",
+          "birthday",
+          "blood",
+          "sex",
+          "levelActivity"
+        ],
+        "properties": {
+          "height": {
+            "type": "integer",
+            "description": "User's height",
+            "example": 150
+          },
+          "currentWeight": {
+            "type": "integer",
+            "description": "User's currentWeight",
+            "example": 35
+          },
+          "desiredWeight": {
+            "type": "integer",
+            "description": "User's currentWeight",
+            "example": 35
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "2005-06-17T07:27:41.902Z"
+          },
+          "blood": {
+            "type": "integer",
+            "description": "User's blood",
+            "enum": [1, 2, 3, 4],
+            "example": 3
+          },
+          "sex": {
+            "type": "string",
+            "description": "User's sex",
+            "enum": ["male", "female"],
+            "example": "female"
+          },
+          "levelActivity": {
+            "type": "integer",
+            "description": "User's levelActivity",
+            "enum": [1, 2, 3, 4, 5],
+            "example": 2
+          }
+        }
       }
     },
     "securitySchemes": {
