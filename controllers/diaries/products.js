@@ -1,5 +1,5 @@
 const { Day } = require('../../models/diary');
-const { HttpError, ctrlWrapper } = require('../../Helpers');
+const { HttpError, ctrlWrapper } = require('../../helpers');
 const moment = require('moment');
 
 const addProductToDay = async (req, res, next) => {
