@@ -7,6 +7,7 @@ require("dotenv").config();
 
 const usersRouter = require("./routes/api/users");
 const productsRouter = require("./routes/api/products");
+const exercisesRouter = require("./routes/api/exercises");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use("/users", usersRouter);
 app.use("/products", productsRouter);
+app.use("/exercises", exercisesRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
