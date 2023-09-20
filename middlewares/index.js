@@ -1,13 +1,15 @@
-const validation = require("./validation");
-const emptyBody = require("./emptyBody");
-const isValidid = require("./isValidid");
-const auth = require("./auth");
-const upload = require("./upload");
+const validation = require('./validation');
+const ctrlWrapper = require('./ctrlWrapper');
+const emptyBody = require('./emptyBody');
+const isValidid = require('./isValidid');
+const auth = require('./auth');
+const handleMongooseError = require('./handleMongooseError');
 
 module.exports = {
-  validation,
-  emptyBody,
-  isValidid,
-  auth,
-  upload,
+    validation,
+    ctrlWrapper,
+    emptyBody,
+    isValidid,
+    auth,
+    handleMongooseError,
 };
