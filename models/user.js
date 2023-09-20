@@ -29,7 +29,7 @@ const userSchema = Schema(
       required: [true, "Email is required"],
       unique: true,
     },
-    avatarURL: { type: String, default: null },
+    avatar: { type: String, default: null },
     token: {
       type: String,
       default: null,
@@ -37,11 +37,11 @@ const userSchema = Schema(
     bodyData: {
       height: {
         type: Number,
-        min: [140, "Height must be greater than or equal to 140"],
+        min: [150, "Height must be greater than or equal to 150"],
       },
       currentWeight: {
         type: Number,
-        min: [40, "Current weight must be greater than or equal to 40"],
+        min: [35, "Current weight must be greater than or equal to 35"],
       },
       desiredWeight: {
         type: Number,
@@ -111,54 +111,13 @@ const joiLoginSchema = Joi.object({
 });
 
 const joiUserParamsSchema = Joi.object({
-  height: Joi.number().integer().min(140).required().messages({
+  height: Joi.number().integer().min(150).required().messages({
     "number.base": "Height must be a number",
     "number.integer": "Height must be an integer",
     "number.min": "Height must be greater than or equal to 140",
     "any.required": "Height is a required field",
   }),
-  currentWeight: Joi.number().integer().min(40).required().messages({
-    "number.base": "Current weight must be a number",
-    "number.integer": "Current weight must be an integer",
-    "number.min": "Current weight must be greater than or equal to 40",
-    "any.required": "Current weight is a required field",
-  }),
-  desiredWeight: Joi.number().integer().min(35).required().messages({
-    "number.base": "Desired weight must be a number",
-    "number.integer": "Desired weight must be an integer",
-    "number.min": "Desired weight must be greater than or equal to 35",
-    "any.required": "Desired weight is a required field",
-  }),
-  birthday: Joi.date().max(maxDate).iso().required().messages({
-    "date.format": "Please enter a valid date 'YYYY-mm-dd' ",
-    "date.max": "You must be 18 years old",
-    "any.required": "Date is a required field",
-  }),
-  blood: Joi.number().valid(1, 2, 3, 4).required().messages({
-    "number.base": "Blood must be a number",
-    "any.only": "Blood should be in the range 1-4",
-    "any.required": "Blood is a required field",
-  }),
-  sex: Joi.string().valid("male", "female").required().messages({
-    "string.base": "Sex must be a string",
-    "any.only": "Sex should be 'male' or 'female'",
-    "any.required": "Sex is a required field",
-  }),
-  levelActivity: Joi.number().valid(1, 2, 3, 4, 5).required().messages({
-    "number.base": "Level activity must be a number",
-    "any.only": "Level activity should be in the range 1-5",
-    "any.required": "Level activity is a required field",
-  }),
-});
-
-const joiUpdateParamsSchema = Joi.object({
-  height: Joi.number().integer().min(140).required().messages({
-    "number.base": "Height must be a number",
-    "number.integer": "Height must be an integer",
-    "number.min": "Height must be greater than or equal to 140",
-    "any.required": "Height is a required field",
-  }),
-  currentWeight: Joi.number().integer().min(40).required().messages({
+  currentWeight: Joi.number().integer().min(35).required().messages({
     "number.base": "Current weight must be a number",
     "number.integer": "Current weight must be an integer",
     "number.min": "Current weight must be greater than or equal to 40",
@@ -199,5 +158,4 @@ module.exports = {
   joiRegisterSchema,
   joiLoginSchema,
   joiUserParamsSchema,
-  joiUpdateParamsSchema,
 };
