@@ -1,7 +1,6 @@
 const { Day } = require('../../models/');
-const { HttpError } = require('../../Helpers');
+const { HttpError, ctrlWrapper } = require('../../Helpers');
 const moment = require('moment');
-const { ctrlWrapper } = require('../../middlewares');
 
 const addExerciseToDay = async (req, res, next) => {
     const { date = moment().format('YYYY-MM-DD'), exercise } = req.body;
