@@ -1,7 +1,7 @@
 const { Product } = require("../../models");
 
 const getProducts = async (req, res) => {
-  const { title, category, recommended } = req.body;
+  const { title, category, recommended } = req.query;
 
   const { blood } = req.user.bodyData;
 
