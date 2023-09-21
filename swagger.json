@@ -73,7 +73,6 @@
                   "$ref": "#/components/schemas/BadRequest"
                 }
               }
-
             }
           },
           "409": {
@@ -97,7 +96,6 @@
                 "$ref": "#/components/schemas/SignInDto"
               }
             }
-
           }
         },
         "responses": {
@@ -152,7 +150,6 @@
                   "$ref": "#/components/schemas/AuthenticationFailed"
                 }
               }
-
             }
           }
         }
@@ -174,7 +171,6 @@
               }
             }
           }
-
         },
         "responses": {
           "204": {
@@ -195,7 +191,6 @@
                   "$ref": "#/components/schemas/AuthenticationFailed"
                 }
               }
-
             }
           }
         }
@@ -217,7 +212,6 @@
               }
             }
           }
-
         },
         "responses": {
           "201": {
@@ -236,7 +230,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequest"
-
                 }
               }
             }
@@ -301,7 +294,6 @@
                 }
               }
             }
-
           },
           "401": {
             "description": "Bearer auth failed",
@@ -319,7 +311,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorNotFoundResponse"
-
                 }
               }
             }
@@ -353,7 +344,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorNotFoundResponse"
-
                 }
               }
             }
@@ -378,12 +368,10 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/getBodyParts"
-
                 }
               }
             }
           },
-
 
           "404": {
             "description": "Not found",
@@ -415,7 +403,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/getMuscle"
-
                 }
               }
             }
@@ -450,7 +437,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/getEquipments"
-
                 }
               }
             }
@@ -695,7 +681,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuthenticationFailed"
-
                 }
               }
             }
@@ -835,10 +820,10 @@
               "_id",
               "name",
               "email",
-              "avatar",
-              "dailyTime",
-              "dailyСalories",
-              "bodyParameters"
+              "avatarUrl",
+              "dailySportMin",
+              "dailyRateCalories",
+              "bodyData"
             ],
             "properties": {
               "_id": {
@@ -856,21 +841,21 @@
                 "description": "User's email",
                 "example": "mark@gmail.com"
               },
-              "avatar": {
+              "avatarUrl": {
                 "type": "string",
                 "description": "User's avatar"
               },
-              "dailyTime": {
+              "dailySportMin": {
                 "type": "integer",
                 "description": "User's dailyTime",
                 "example": 110
               },
-              "dailyСalories": {
+              "dailyRateCalories": {
                 "type": "integer",
                 "description": "User's dailyTime",
                 "example": 2200
               },
-              "bodyParameters": {
+              "bodyData": {
                 "type": "object",
                 "description": "User's bodyParameters",
                 "required": [
@@ -1224,7 +1209,6 @@
                 "example": "100",
                 "description": "Мінімум 1"
               }
-
             }
           }
         }
@@ -1321,7 +1305,6 @@
           "message": {
             "type": "string",
             "example": "Product or exercise is removed"
-
           }
         }
       }
