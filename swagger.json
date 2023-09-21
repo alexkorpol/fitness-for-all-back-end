@@ -318,6 +318,72 @@
         }
       }
     },
+    "/products/category": {
+      "get": {
+        "tags": ["Product"],
+        "summary": "Get all products",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Едпоінт який повертає всі існуючі в базі даних продукти"
+        },
+        "responses": {
+          "200": {
+            "description": "Повертає список продуктів",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getProducts"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": ["Product"],
+        "summary": " A private endpoint, which is used by an authorized body to produce a product, is permissible for the type of blood before the injection of a fence.",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Приватний ендпоінт, який повертає авторизованому користувачу усі продукти, допустимі за типом його крові до вживання або навпаки заборонені."
+        },
+        "responses": {
+          "200": {
+            "description": "Повертає у відповіді: **groupBloodNotAllowed**- boolean, повертає true або false, **_id**- string, унікальний, **weight**- number, вага продуктів 100 граммів, **calories**- number,калорії в 100 грамах продукту, **title**- string, назва продукту, **category**- string,підкатегорія продуктів (риба, горішки і т.д.)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getCategoryProducts"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/exercises/training": {
       "get": {
         "tags": ["Exercise"],
@@ -932,6 +998,54 @@
             "type": "string",
             "description": "Error message",
             "example": "Not Found"
+          }
+        }
+      },
+      "getProducts": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Array all products",
+            "example": {
+              "allCategories": [
+                "berries",
+                "dried fruits",
+                "eggs",
+                "fish",
+                "flour"
+              ]
+            }
+          }
+        }
+      },
+      "getCategoryProducts": {
+        "type": "object",
+        "properties": {
+          "groupBloodNotAllowed": {
+            "type": "boolean",
+            "example": { "1": false, "2": false, "3": false, "4": false }
+          },
+          "_id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "5d51694902b2373622ff5b65"
+          },
+          "weight": {
+            "type": "number",
+            "example": 100
+          },
+          "calories": {
+            "type": "number",
+            "example": 112
+          },
+          "category": {
+            "type": "string",
+            "example": "fish"
+          },
+          "title": {
+            "type": "string",
+            "example": "langoustine"
           }
         }
       },
