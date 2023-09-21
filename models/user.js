@@ -29,7 +29,7 @@ const userSchema = Schema(
       required: [true, "Email is required"],
       unique: true,
     },
-    avatar: { type: String, default: null },
+    avatarUrl: { type: String, default: null },
     token: {
       type: String,
       default: null,

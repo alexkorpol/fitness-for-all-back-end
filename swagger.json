@@ -73,6 +73,7 @@
                   "$ref": "#/components/schemas/BadRequest"
                 }
               }
+
             }
           },
           "409": {
@@ -96,6 +97,7 @@
                 "$ref": "#/components/schemas/SignInDto"
               }
             }
+
           }
         },
         "responses": {
@@ -150,6 +152,7 @@
                   "$ref": "#/components/schemas/AuthenticationFailed"
                 }
               }
+
             }
           }
         }
@@ -171,6 +174,7 @@
               }
             }
           }
+
         },
         "responses": {
           "204": {
@@ -191,6 +195,7 @@
                   "$ref": "#/components/schemas/AuthenticationFailed"
                 }
               }
+
             }
           }
         }
@@ -212,6 +217,7 @@
               }
             }
           }
+
         },
         "responses": {
           "201": {
@@ -230,6 +236,7 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequest"
+
                 }
               }
             }
@@ -294,6 +301,7 @@
                 }
               }
             }
+
           },
           "401": {
             "description": "Bearer auth failed",
@@ -311,6 +319,7 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorNotFoundResponse"
+
                 }
               }
             }
@@ -344,6 +353,7 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorNotFoundResponse"
+
                 }
               }
             }
@@ -351,6 +361,7 @@
         }
       }
     },
+
     "/exercises/bodyparts": {
       "get": {
         "tags": ["Exercise"],
@@ -367,10 +378,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/getBodyParts"
+
                 }
               }
             }
           },
+
+
           "404": {
             "description": "Not found",
             "content": {
@@ -384,6 +398,7 @@
         }
       }
     },
+
     "/exercises/muscules": {
       "get": {
         "tags": ["Exercise"],
@@ -400,10 +415,12 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/getMuscle"
+
                 }
               }
             }
           },
+
           "404": {
             "description": "Not found",
             "content": {
@@ -433,6 +450,7 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/getEquipments"
+
                 }
               }
             }
@@ -677,6 +695,7 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuthenticationFailed"
+
                 }
               }
             }
@@ -993,6 +1012,7 @@
           }
         }
       },
+
       "getTraining": {
         "type": "object",
         "required": [
@@ -1110,6 +1130,7 @@
           }
         }
       },
+
       "getDayResponse": {
         "type": "object",
         "properties": {
@@ -1203,6 +1224,7 @@
                 "example": "100",
                 "description": "Мінімум 1"
               }
+
             }
           }
         }
@@ -1263,7 +1285,6 @@
       "RemoveProduct": {
         "type": "object",
         "required": ["productId"],
-
         "properties": {
           "date": {
             "type": "string",
@@ -1300,6 +1321,7 @@
           "message": {
             "type": "string",
             "example": "Product or exercise is removed"
+
           }
         }
       }
