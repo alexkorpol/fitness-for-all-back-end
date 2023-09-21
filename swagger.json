@@ -128,9 +128,7 @@
         "summary": "Get current user info",
         "parameters": [],
         "security": [{ "Bearer": [] }],
-
         "description": " Ендпоінт current використовується для отримання інформації про поточного авторизованого користувача. Цей ендпоінт повертає об'єкт, який містить інформацію про користувача, таку як ім'я, електронна пошта, ідентифікатор користувача тощо.Параметри: відсутні. Опис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /api/auth/sign-out з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.",
-
         "responses": {
           "200": {
             "description": "JSON-об'єкт, який містить інформацію про поточного авторизованого користувача. Oпис параматрів відповіді:**id** - ObjectId, унікальний ідентифікатор користувача **name** - string, ім'я користувача. **email** - string, електронна пошта користувача.",
@@ -174,14 +172,7 @@
         },
         "responses": {
           "204": {
-            "description": "User signed out - успішний вихід з системи",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Signs out user"
-                }
-              }
-            }
+            "description": "User signed out - No Content"
           },
           "401": {
             "description": "Bearer auth failed - невалідний токен - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
@@ -318,6 +309,67 @@
         }
       }
     },
+    "/users/avatars": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update User avatar",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Update user's avatar",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAvatarRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation, user's avatar updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAvatarResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/products/category": {
       "get": {
         "tags": ["Product"],
@@ -355,7 +407,26 @@
       "get": {
         "tags": ["Product"],
         "summary": " A private endpoint, which is used by an authorized body to produce a product, is permissible for the type of blood before the injection of a fence.",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "title",
+            "type": "string",
+            "example": "langoustine"
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "type": "string",
+            "example": "fish"
+          },
+          {
+            "in": "query",
+            "name": "recommended",
+            "type": "boolean",
+            "example": false
+          }
+        ],
         "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "Приватний ендпоінт, який повертає авторизованому користувачу усі продукти, допустимі за типом його крові до вживання або навпаки заборонені."
@@ -417,7 +488,6 @@
         }
       }
     },
-
     "/exercises/bodyparts": {
       "get": {
         "tags": ["Exercise"],
@@ -452,7 +522,6 @@
         }
       }
     },
-
     "/exercises/muscules": {
       "get": {
         "tags": ["Exercise"],
@@ -520,7 +589,7 @@
         }
       }
     },
-    "dairy/day/:date?": {
+    "/dairy/day/:date?": {
       "get": {
         "tags": ["Diary"],
         "summary": "Get all activities per day. Default is today date",
@@ -560,7 +629,7 @@
         }
       }
     },
-    "dairy/addExercise": {
+    "/dairy/addExercise": {
       "post": {
         "tags": ["Diary"],
         "summary": "Add exercise to single day",
@@ -611,7 +680,7 @@
         }
       }
     },
-    "dairy/addProduct": {
+    "/dairy/addProduct": {
       "post": {
         "tags": ["Diary"],
         "summary": "Add product to single day",
@@ -662,7 +731,7 @@
         }
       }
     },
-    "dairy/removeProduct": {
+    "/dairy/removeProduct": {
       "delete": {
         "tags": ["Diary"],
         "summary": "Remove product to single day by tag",
@@ -713,7 +782,7 @@
         }
       }
     },
-    "dairy/removeExercise": {
+    "/dairy/removeExercise": {
       "delete": {
         "tags": ["Diary"],
         "summary": "Remove exercise to single day by tag",
@@ -988,9 +1057,6 @@
           }
         }
       },
-      "Signs out user": {
-        "type": "object"
-      },
       "ErrorNotFoundResponse": {
         "type": "object",
         "properties": {
@@ -1004,48 +1070,68 @@
       "getProducts": {
         "type": "object",
         "properties": {
-          "message": {
-            "type": "string",
-            "description": "Array all products",
-            "example": {
-              "allCategories": [
-                "berries",
-                "dried fruits",
-                "eggs",
-                "fish",
-                "flour"
-              ]
-            }
+          "allCategories": {
+            "type": "array",
+            "description": "Categories array",
+            "example": [
+              "alcoholic drinks",
+              "berries",
+              "cereals",
+              "dairy",
+              "dried fruits",
+              "eggs",
+              "fish",
+              "flour",
+              "fruits",
+              "meat",
+              "mushrooms",
+              "nuts",
+              "oils and fats",
+              "poppy",
+              "sausage",
+              "seeds",
+              "sesame",
+              "soft drinks",
+              "vegetables and herbs"
+            ]
           }
         }
       },
       "getCategoryProducts": {
         "type": "object",
         "properties": {
-          "groupBloodNotAllowed": {
-            "type": "boolean",
-            "example": { "1": false, "2": false, "3": false, "4": false }
-          },
-          "_id": {
-            "type": "string",
-            "description": "User's id",
-            "example": "5d51694902b2373622ff5b65"
-          },
-          "weight": {
-            "type": "number",
-            "example": 100
-          },
-          "calories": {
-            "type": "number",
-            "example": 112
-          },
-          "category": {
-            "type": "string",
-            "example": "fish"
-          },
-          "title": {
-            "type": "string",
-            "example": "langoustine"
+          "allProducts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "groupBloodNotAllowed": {
+                  "type": "boolean",
+                  "example": { "1": false, "2": false, "3": false, "4": false }
+                },
+                "_id": {
+                  "type": "string",
+                  "description": "User's id",
+                  "example": "5d51694902b2373622ff5b65"
+                },
+                "weight": {
+                  "type": "number",
+                  "example": 100
+                },
+                "calories": {
+                  "type": "number",
+                  "example": 112
+                },
+                "category": {
+                  "type": "string",
+                  "example": "fish"
+                },
+                "title": {
+                  "type": "string",
+                  "example": "langoustine"
+                }
+              }
+            }
           }
         }
       },
@@ -1111,7 +1197,6 @@
           }
         }
       },
-
       "getTraining": {
         "type": "object",
         "required": [
@@ -1229,7 +1314,6 @@
           }
         }
       },
-
       "getDayResponse": {
         "type": "object",
         "properties": {
@@ -1421,6 +1505,29 @@
             "example": "Product or exercise is removed"
           }
         }
+      },
+      "UserAvatarRequest": {
+        "type": "object",
+        "required": ["avatar"],
+        "properties": {
+          "avatar": {
+            "type": "file",
+            "description": "User's avatar"
+          }
+        }
+      },
+      "UserAvatarResponse": {
+        "type": "object",
+        "properties": {
+          "avatarUrl": {
+            "type": "string",
+            "description": "today's date or needed date",
+            "example": "avatars\\650c1de94860d6d0172c4b63_1676295806122712757.png"
+          }
+        }
+      },
+      "Signs out user": {
+        "type": "object"
       }
     },
     "securitySchemes": {
