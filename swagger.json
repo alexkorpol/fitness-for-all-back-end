@@ -73,6 +73,7 @@
                   "$ref": "#/components/schemas/BadRequest"
                 }
               }
+
             }
           },
           "409": {
@@ -96,6 +97,7 @@
                 "$ref": "#/components/schemas/SignInDto"
               }
             }
+
           }
         },
         "responses": {
@@ -150,6 +152,7 @@
                   "$ref": "#/components/schemas/AuthenticationFailed"
                 }
               }
+
             }
           }
         }
@@ -171,6 +174,7 @@
               }
             }
           }
+
         },
         "responses": {
           "204": {
@@ -191,6 +195,7 @@
                   "$ref": "#/components/schemas/AuthenticationFailed"
                 }
               }
+
             }
           }
         }
@@ -212,6 +217,7 @@
               }
             }
           }
+
         },
         "responses": {
           "201": {
@@ -230,6 +236,7 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequest"
+
                 }
               }
             }
@@ -294,6 +301,7 @@
                 }
               }
             }
+
           },
           "401": {
             "description": "Bearer auth failed",
@@ -311,6 +319,7 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorNotFoundResponse"
+
                 }
               }
             }
@@ -318,50 +327,130 @@
         }
       }
     },
-    "/users/avatars": {
-      "patch": {
-        "tags": ["User"],
-        "summary": "Update User avatar",
+    "/exercises/training": {
+      "get": {
+        "tags": ["Exercise"],
+        "summary": "Get all exercises",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Update user's avatar",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/UserAvatarRequest"
-              }
-            }
-          }
+          "description": "Едпоінт який повертає всі існуючі в базі даних тренування"
         },
         "responses": {
           "200": {
-            "description": "Successful operation, user's avatar updated",
+            "description": "Опис параметрів відповіді: **id** користувача, **bodyPart** - string, назва частини тіла для вправ, **equipment**-string назва обладнання для тренування, **gifUrl** - string  url адреса на відео тренування, **name**-string опис тренування, **target**-string обладнання для тренування, **burnedCalories**- number кількість витрачених калорій за тренування, **time** - number час виконання тренування",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserAvatarResponse"
+                  "$ref": "#/components/schemas/getTraining"
                 }
               }
             }
           },
-          "400": {
-            "description": "Validation error",
+          "404": {
+            "description": "Not found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BadRequest"
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/exercises/bodyparts": {
+      "get": {
+        "tags": ["Exercise"],
+        "summary": "Get all body parts",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Едпоінт який повертає всі існуючі в базі даних частини тіла"
+        },
+        "responses": {
+          "200": {
+            "description": "Опис параметрів відповіді: **id** користувача, **filter** - string, фільтрація частин тіла, **name**-string назва частини тіла для тренування, **imgURL** - string  url адреса на картинку тренування в форматі jpg ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getBodyParts"
+
                 }
               }
             }
           },
-          "401": {
-            "description": "Bearer auth failed",
+
+
+          "404": {
+            "description": "Not found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuthenticationFailed"
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/exercises/muscules": {
+      "get": {
+        "tags": ["Exercise"],
+        "summary": "Get all muscules",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Едпоінт який повертає всі існуючі в базі даних М'язів"
+        },
+        "responses": {
+          "200": {
+            "description": "Опис параметрів відповіді: **id** користувача, **filter** - string, фільтрація м'язів, **name**-string назва м'язів, **imgURL** - string  url адреса на картинку тренування м'язів в форматі jpg ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getMuscle"
+
+                }
+              }
+            }
+          },
+
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/exercises/equipments": {
+      "get": {
+        "tags": ["Exercise"],
+        "summary": "Get all equipments",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Едпоінт який повертає всі існуючі в базі даних обладнання"
+        },
+        "responses": {
+          "200": {
+            "description": "Опис параметрів відповіді: **id** користувача, **filter** - string, фільтрація обладнання, **name**-string назва обладнання, **imgURL** - string  url адреса на картинку облпднання в форматі jpg ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getEquipments"
+
                 }
               }
             }
@@ -606,6 +695,7 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuthenticationFailed"
+
                 }
               }
             }
@@ -922,6 +1012,125 @@
           }
         }
       },
+
+      "getTraining": {
+        "type": "object",
+        "required": [
+          "_id",
+          "bodyPart",
+          "equipment",
+          "gifUrl",
+          "name",
+          "target",
+          "burnedCalories",
+          "time"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "65053e58a07e502d3e5d703f"
+          },
+          "bodyPart": {
+            "type": "string",
+            "example": "waist"
+          },
+          "equipment": {
+            "type": "string",
+            "example": "assisted"
+          },
+          "gifUrl": {
+            "type": "string",
+            "example": "https://res.cloudinary.com/ditdqzoio/image/upload/v1687127066/exercises/0011.gif"
+          },
+          "name": {
+            "type": "string",
+            "example": "assisted hanging knee raise"
+          },
+          "target": {
+            "type": "string",
+            "example": "abs"
+          },
+          "burnedCalories": {
+            "type": "number",
+            "example": 49
+          },
+          "time": {
+            "type": "number",
+            "example": 3
+          }
+        }
+      },
+      "getBodyParts": {
+        "type": "object",
+        "required": ["_id", "filter", "name", "imgURL"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "65053e65a07e502d3e5d756d"
+          },
+          "filter": {
+            "type": "string",
+            "example": "Body parts"
+          },
+          "name": {
+            "type": "string",
+            "example": "upper legs"
+          },
+          "imgURL": {
+            "type": "string",
+            "example": "https://res.cloudinary.com/dn4iogcf4/image/upload/v1694469563/categories/upper_legs_dlkfwx.jpg"
+          }
+        }
+      },
+      "getMuscle": {
+        "type": "object",
+        "required": ["_id", "filter", "name", "imgURL"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "65053e65a07e502d3e5d7591"
+          },
+          "filter": {
+            "type": "string",
+            "example": "Muscles"
+          },
+          "name": {
+            "type": "string",
+            "example": "delts"
+          },
+          "imgURL": {
+            "type": "string",
+            "example": "https://res.cloudinary.com/dn4iogcf4/image/upload/v1694469568/categories/delts_ui5hy5.jpg"
+          }
+        }
+      },
+      "getEquipments": {
+        "type": "object",
+        "required": ["_id", "filter", "name", "imgURL"],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "65053e65a07e502d3e5d7578"
+          },
+          "filter": {
+            "type": "string",
+            "example": "Equipment"
+          },
+          "name": {
+            "type": "string",
+            "example": "hammer"
+          },
+          "imgURL": {
+            "type": "string",
+            "example": "https://res.cloudinary.com/dn4iogcf4/image/upload/v1694553685/hammer_rkogqp.jpg"
+          }
+        }
+      },
+
       "getDayResponse": {
         "type": "object",
         "properties": {
@@ -1015,6 +1224,7 @@
                 "example": "100",
                 "description": "Мінімум 1"
               }
+
             }
           }
         }
@@ -1075,7 +1285,6 @@
       "RemoveProduct": {
         "type": "object",
         "required": ["productId"],
-
         "properties": {
           "date": {
             "type": "string",
@@ -1112,26 +1321,7 @@
           "message": {
             "type": "string",
             "example": "Product or exercise is removed"
-          }
-        }
-      },
-      "UserAvatarRequest": {
-        "type": "object",
-        "required": ["avatar"],
-        "properties": {
-          "avatar": {
-            "type": "file",
-            "description": "User's avatar"
-          }
-        }
-      },
-      "UserAvatarResponse": {
-        "type": "object",
-        "properties": {
-          "avatarUrl": {
-            "type": "string",
-            "description": "today's date or needed date",
-            "example": "avatars\\650c1de94860d6d0172c4b63_1676295806122712757.png"
+
           }
         }
       }
