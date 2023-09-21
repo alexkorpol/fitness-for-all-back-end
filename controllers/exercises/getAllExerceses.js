@@ -1,16 +1,14 @@
-const { Exercise } = require("../../models");
+const Exercise = require("../../models/exercise");
 
 const getAllExercises = async (req, res) => {
-  const result = await Exercise.distinct("training");
-  if (!result) {
+  const getExercises = await Exercise.find();
+  if (!getExercises) {
     res.status(404).json({ message: "Not found" });
     return;
   }
   res.status(200).json({
-    result,
+    getExercises,
   });
 };
 
-module.exports = {
-  getAllExercises,
-};
+module.exports = getAllExercises;
