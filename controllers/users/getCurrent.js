@@ -3,21 +3,22 @@ const getCurrent = async (req, res) => {
     _id,
     name,
     email,
-    avatar,
+    avatarUrl,
     token,
-    dailyTime,
-    dailyСalories,
-    bodyParameters,
+    dailySportMin,
+    dailyRateCalories,
+    bodyData,
   } = req.user;
+
   res.status(200).json({
     _id,
     name,
     email,
-    avatar,
+    avatarUrl,
     token,
-    dailyTime,
-    dailyСalories,
-    bodyParameters,
+    dailySportMin,
+    dailyRateCalories,
+    bodyData,
   });
 };
 
