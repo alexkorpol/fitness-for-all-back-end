@@ -886,10 +886,10 @@
               "_id",
               "name",
               "email",
-              "avatar",
-              "dailyTime",
-              "dailyСalories",
-              "bodyParameters"
+              "avatarUrl",
+              "dailySportMin",
+              "dailyRateCalories",
+              "bodyData"
             ],
             "properties": {
               "_id": {
@@ -907,21 +907,21 @@
                 "description": "User's email",
                 "example": "mark@gmail.com"
               },
-              "avatar": {
+              "avatarUrl": {
                 "type": "string",
                 "description": "User's avatar"
               },
-              "dailyTime": {
+              "dailySportMin": {
                 "type": "integer",
                 "description": "User's dailyTime",
                 "example": 110
               },
-              "dailyСalories": {
+              "dailyRateCalories": {
                 "type": "integer",
                 "description": "User's dailyTime",
                 "example": 2200
               },
-              "bodyParameters": {
+              "bodyData": {
                 "type": "object",
                 "description": "User's bodyParameters",
                 "required": [
