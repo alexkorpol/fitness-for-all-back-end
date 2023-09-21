@@ -1,1026 +1,1147 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-        "version": "1.0.2",
-        "title": "Power Pulse API docs",
-        "description": "API documentation for project Power Pulse",
-        "license": {
-            "name": "MIT",
-            "url": "https://opensource.org/licenses/MIT"
-        }
-    },
-    "consumes": ["application/json", "multipart/form-data"],
-    "produces": ["application/json"],
-    "servers": [{ "url": "http://localhost:3000" }, { "url": "https://fitness-for-all-back-end.onrender.com" }],
-    "tags": [
-        {
-            "name": "Auth",
-            "description": "Authorization endpoints"
-        },
-        {
-            "name": "User",
-            "description": "User endpoints"
-        },
-        {
-            "name": "Product",
-            "description": "Product endpoints"
-        },
-        {
-            "name": "Exercise",
-            "description": "Exercise endpoints"
-        },
-        {
-            "name": "Diary",
-            "description": "Diary endpoints"
-        }
-    ],
-    "paths": {
-        "/users/register": {
-            "post": {
-                "tags": ["Auth"],
-                "summary": "User registration",
-                "parameters": [],
-                "requestBody": {
-                    "description": "Oпис параматрів запиту: **name** -string, ім'я користувача. **email**-string електронна пошта користувача. **password**-string зашифрований пароль має мітити 6 літер в різному регістрі і принаймні одну цифру та бути довжиною 7 символів.всі поля є обов'язковими. ",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/SignIn"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Oпис параматрів відповіді: **token**-string використовується для зберігання стану авторизації користувача в системі, дозволяє здийснювати захищені запити до API.Токен є довільним рядком символів і генерується при кожній новій авторизації коритувача.., **name**-string ім'я користувача, **email**-string  електронна пошта користувача",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/RegistrationResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/BadRequest"
-                                }
-                            }
-                        }
-                    },
-                    "409": {
-                        "description": "User with such email already exists",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/users/login": {
-            "post": {
-                "tags": ["Auth"],
-                "summary": "User Login",
-                "parameters": [],
-                "requestBody": {
-                    "description": " Опис параметрів запиту: **email**-string, required, улуктронна пошта користувача, обов'язковий параметр. **password**-string, required, зашифрований пароль користувача, обо'язковий параметр",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/SignInDto"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Oпис параматрів відповіді: **token**-string використовується для зберігання стану авторизації користувача в системі, дозволяє здийснювати захищені запити до API.Токен є довільним рядком символів і генерується при кожній новій авторизації коритувача..,  **email**-string  електронна пошта користувача",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/LoginRequest"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/BadRequest"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/current": {
-            "get": {
-                "tags": ["User"],
-                "summary": "Get current user info",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-
-                "description": " Ендпоінт current використовується для отримання інформації про поточного авторизованого користувача. Цей ендпоінт повертає об'єкт, який містить інформацію про користувача, таку як ім'я, електронна пошта, ідентифікатор користувача тощо.Параметри: відсутні. Опис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /api/auth/sign-out з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.",
-
-                "responses": {
-                    "200": {
-                        "description": "JSON-об'єкт, який містить інформацію про поточного авторизованого користувача. Oпис параматрів відповіді:**id** - ObjectId, унікальний ідентифікатор користувача **name** - string, ім'я користувача. **email** - string, електронна пошта користувача.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CurrentResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Bearer auth failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthenticationFailed"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/logout": {
-            "post": {
-                "tags": ["Auth"],
-                "summary": "Signs out user",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-                "requestBody": {
-                    "description": "Ендпоінт логауту - це механізм виходу з системи, який припиняє дію сесії користувача та знищує токен доступу, що був виданий при попередній аутентифікації.  Опис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /users/logout з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Signs out user"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "204": {
-                        "description": "User signed out - успішний вихід з системи",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Signs out user"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Bearer auth failed - невалідний токен - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthenticationFailed"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/params": {
-            "post": {
-                "tags": ["User"],
-                "summary": "Create User data",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-                "requestBody": {
-                    "description": "Create user's object-data",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CreateUserDataRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful operation, user  data created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CurrentResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/BadRequest"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Bearer auth failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthenticationFailed"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorNotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/update": {
-            "patch": {
-                "tags": ["User"],
-                "summary": "Update User data",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-                "requestBody": {
-                    "description": "Update user's object-data",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CreateUserDataRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation, user data updated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CurrentResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/BadRequest"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Bearer auth failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthenticationFailed"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorNotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "dairy/day/:date?": {
-            "get": {
-                "tags": ["Diary"],
-                "summary": "Get all activities per day. Default is today date",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-                "responses": {
-                    "200": {
-                        "description": "OK. У відповідь приходить об'єкт по заданому дню, по дефолту сьогоднішня дата",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/getDayResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Bearer auth failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthenticationFailed"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Date does not exist",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DayDoesntExist"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "dairy/addExercise": {
-            "post": {
-                "tags": ["Diary"],
-                "summary": "Add exercise to single day",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-                "requestBody": {
-                    "description": "Додати вправу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Add Exercise"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Exercise is added",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ExerciseIsAdded"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Bearer auth failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthenticationFailed"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorNotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "dairy/addProduct": {
-            "post": {
-                "tags": ["Diary"],
-                "summary": "Add product to single day",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-                "requestBody": {
-                    "description": "Додати продукт. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Add Product"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Product is added",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ProductIsAdded"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Bearer auth failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthenticationFailed"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorNotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "dairy/removeProduct": {
-            "delete": {
-                "tags": ["Diary"],
-                "summary": "Remove product to single day by tag",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-                "requestBody": {
-                    "description": "Видалити продукт по його тегу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RemoveProduct"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Product is removed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DairyIsRemoved"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Bearer auth failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthenticationFailed"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorNotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "dairy/removeExercise": {
-            "delete": {
-                "tags": ["Diary"],
-                "summary": "Remove exercise to single day by tag",
-                "parameters": [],
-                "security": [{ "Bearer": [] }],
-                "requestBody": {
-                    "description": "Видалити вправу по її тегу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RemoveExercise"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Exercise is removed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DairyIsRemoved"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Bearer auth failed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuthenticationFailed"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorNotFoundResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "components": {
-        "schemas": {
-            "SignIn": {
-                "type": "object",
-                "required": ["name", "password", "email"],
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "User's name",
-                        "example": "Mark"
-                    },
-                    "password": {
-                        "type": "string",
-                        "description": "User's password",
-                        "example": "Markqw1"
-                    },
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "example": "mark@example.com"
-                    }
-                }
-            },
-            "SignInDto": {
-                "type": "object",
-                "required": ["email", "password"],
-                "properties": {
-                    "password": {
-                        "type": "string",
-                        "description": "User's password",
-                        "example": "Markqw1"
-                    },
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "example": "mark@example.com"
-                    }
-                }
-            },
-            "RegistrationResponse": {
-                "type": "object",
-                "required": ["user", "token"],
-                "properties": {
-                    "token": {
-                        "type": "string",
-                        "description": "User's token",
-                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
-                    },
-                    "user": {
-                        "type": "object",
-                        "description": "User's object",
-                        "required": ["name", "email"],
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "description": "User's name",
-                                "example": "Mark"
-                            },
-                            "email": {
-                                "type": "string",
-                                "description": "User's email",
-                                "format": "email"
-                            }
-                        }
-                    }
-                }
-            },
-            "LoginRequest": {
-                "type": "object",
-                "required": ["user", "token"],
-                "properties": {
-                    "token": {
-                        "type": "string",
-                        "description": "User's token",
-                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
-                    },
-                    "user": {
-                        "type": "object",
-                        "description": "User's object",
-                        "required": ["email"],
-                        "properties": {
-                            "email": {
-                                "type": "string",
-                                "description": "User's email",
-                                "format": "email"
-                            }
-                        }
-                    }
-                }
-            },
-            "BadRequest": {
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "type": "integer",
-                        "description": "Error status code",
-                        "example": 400
-                    },
-                    "message": {
-                        "type": "string",
-                        "description": "Error message",
-                        "example": "Bad request"
-                    }
-                }
-            },
-            "CurrentResponse": {
-                "type": "object",
-                "required": ["user", "token"],
-                "properties": {
-                    "token": {
-                        "type": "string",
-                        "description": "User's token",
-                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
-                    },
-                    "user": {
-                        "type": "object",
-                        "description": "User's info",
-                        "required": ["_id", "name", "email", "avatar", "dailyTime", "dailyСalories", "bodyParameters"],
-                        "properties": {
-                            "_id": {
-                                "type": "string",
-                                "description": "User's id",
-                                "example": "6505c930cd6008416cdfd45f"
-                            },
-                            "name": {
-                                "type": "string",
-                                "description": "User's name",
-                                "example": "Mark"
-                            },
-                            "email": {
-                                "type": "string",
-                                "description": "User's email",
-                                "example": "mark@gmail.com"
-                            },
-                            "avatar": {
-                                "type": "string",
-                                "description": "User's avatar"
-                            },
-                            "dailyTime": {
-                                "type": "integer",
-                                "description": "User's dailyTime",
-                                "example": 110
-                            },
-                            "dailyСalories": {
-                                "type": "integer",
-                                "description": "User's dailyTime",
-                                "example": 2200
-                            },
-                            "bodyParameters": {
-                                "type": "object",
-                                "description": "User's bodyParameters",
-                                "required": ["height", "currentWeight", "desiredWeight", "birthday", "blood", "sex", "levelActivity"],
-                                "properties": {
-                                    "height": {
-                                        "type": "integer",
-                                        "description": "User's height",
-                                        "example": 150
-                                    },
-                                    "currentWeight": {
-                                        "type": "integer",
-                                        "description": "User's currentWeight",
-                                        "example": 35
-                                    },
-                                    "desiredWeight": {
-                                        "type": "integer",
-                                        "description": "User's currentWeight",
-                                        "example": 35
-                                    },
-                                    "birthday": {
-                                        "type": "string",
-                                        "description": "User's birthday",
-                                        "example": "2005-06-17T07:27:41.902Z"
-                                    },
-                                    "blood": {
-                                        "type": "integer",
-                                        "description": "User's blood",
-                                        "enum": [1, 2, 3, 4],
-                                        "example": 3
-                                    },
-                                    "sex": {
-                                        "type": "string",
-                                        "description": "User's sex",
-                                        "enum": ["male", "female"],
-                                        "example": "female"
-                                    },
-                                    "levelActivity": {
-                                        "type": "integer",
-                                        "description": "User's levelActivity",
-                                        "enum": [1, 2, 3, 4, 5],
-                                        "example": 2
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "AuthenticationFailed": {
-                "type": "object",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "description": "Description of the error",
-                        "example": "Authentication failed. Please log in."
-                    }
-                }
-            },
-            "Signs out user": {
-                "type": "object"
-            },
-            "ErrorNotFoundResponse": {
-                "type": "object",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "description": "Error message",
-                        "example": "Not Found"
-                    }
-                }
-            },
-            "SuccessfulCreateResponse": {
-                "type": "object",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "description": "Success message",
-                        "example": "User data was created successful"
-                    }
-                }
-            },
-            "CreateUserDataRequest": {
-                "type": "object",
-                "required": ["height", "currentWeight", "desiredWeight", "birthday", "blood", "sex", "levelActivity"],
-                "properties": {
-                    "height": {
-                        "type": "integer",
-                        "description": "User's height",
-                        "example": 150
-                    },
-                    "currentWeight": {
-                        "type": "integer",
-                        "description": "User's currentWeight",
-                        "example": 35
-                    },
-                    "desiredWeight": {
-                        "type": "integer",
-                        "description": "User's currentWeight",
-                        "example": 35
-                    },
-                    "birthday": {
-                        "type": "string",
-                        "description": "User's birthday",
-                        "example": "2005-06-17T07:27:41.902Z"
-                    },
-                    "blood": {
-                        "type": "integer",
-                        "description": "User's blood",
-                        "enum": [1, 2, 3, 4],
-                        "example": 3
-                    },
-                    "sex": {
-                        "type": "string",
-                        "description": "User's sex",
-                        "enum": ["male", "female"],
-                        "example": "female"
-                    },
-                    "levelActivity": {
-                        "type": "integer",
-                        "description": "User's levelActivity",
-                        "enum": [1, 2, 3, 4, 5],
-                        "example": 2
-                    }
-                }
-            },
-            "getDayResponse": {
-                "type": "object",
-                "properties": {
-                    "_id": { "type": "string" },
-                    "date": {
-                        "type": "string",
-                        "description": "today's date or needed date"
-                    },
-                    "owner": {
-                        "type": "string",
-                        "description": "User's id",
-                        "example": "650ab7a1d815bb32d3dbec27"
-                    },
-                    "exercises": {
-                        "type": "array",
-                        "description": "Exercises array",
-                        "example": [{ "Exercise": "1" }, { "Exercise": "2" }]
-                    },
-                    "products": {
-                        "type": "array",
-                        "description": "Products array",
-                        "example": [{ "Product": "1" }, { "Product": "2" }]
-                    }
-                }
-            },
-            "DayDoesntExist": {
-                "type": "object",
-                "properties": {
-                    "message": { "type": "string", "description": "Day not found", "example": "Day not found" }
-                }
-            },
-            "Add Product": {
-                "type": "object",
-                "properties": {
-                    "date": {
-                        "type": "string",
-                        "required": false,
-                        "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-                        "example": "2023-09-20"
-                    },
-                    "exercise": {
-                        "type": "object",
-                        "required": ["name", "amount", "calories"],
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "example": "Продукт 1"
-                            },
-                            "amount": {
-                                "type ": "integer",
-                                "example": "30",
-                                "description": "Мінімум 1"
-                            },
-                            "calories": {
-                                "type ": "integer",
-                                "example": "100",
-                                "description": "Мінімум 1"
-                            }
-                        }
-                    }
-                }
-            },
-            "Add Exercise": {
-                "type": "object",
-                "properties": {
-                    "date": {
-                        "type": "string",
-                        "required": false,
-                        "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-                        "example": "2023-09-20"
-                    },
-                    "exercise": {
-                        "type": "object",
-                        "required": ["name", "duration", "calories"],
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "example": "Вправа 1"
-                            },
-                            "duration": {
-                                "type ": "integer",
-                                "example": "30",
-                                "description": "Мінімум 1"
-                            },
-                            "calories": {
-                                "type ": "integer",
-                                "example": "100",
-                                "description": "Мінімум 1"
-                            }
-                        }
-                    }
-                }
-            },
-            "ExerciseIsAdded": {
-                "type": "object",
-                "required": ["name", "duration", "calories"],
-                "properties": {
-                    "exercise": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "required": true,
-                                "example": "Вправа 1"
-                            },
-                            "duration": {
-                                "type ": "integer",
-                                "required": true,
-                                "example": "30",
-                                "description": "Мінімум 1"
-                            },
-                            "calories": {
-                                "type ": "integer",
-                                "required": true,
-                                "example": "100",
-                                "description": "Мінімум 1"
-                            }
-                        }
-                    }
-                }
-            },
-            "ProductIsAdded": {
-                "type": "object",
-                "required": ["name", "amount", "calories"],
-                "properties": {
-                    "exercise": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "example": "Продукт 1"
-                            },
-                            "amount": {
-                                "type ": "integer",
-                                "example": "30",
-                                "description": "Мінімум 1"
-                            },
-                            "calories": {
-                                "type ": "integer",
-                                "example": "100",
-                                "description": "Мінімум 1"
-                            }
-                        }
-                    }
-                }
-            },
-            "RemoveProduct": {
-                "type": "object",
-                "required": ["productId"],
-
-                "properties": {
-                    "date": {
-                        "type": "string",
-                        "required": false,
-                        "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-                        "example": "2023-09-20"
-                    },
-                    "productId": { "type": "string", "example": "650adc7cdae223246162557f" }
-                }
-            },
-            "RemoveExercise": {
-                "type": "object",
-                "required": ["productId"],
-
-                "properties": {
-                    "date": {
-                        "type": "string",
-                        "required": false,
-                        "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-                        "example": "2023-09-20"
-                    },
-                    "exerciseId": { "type": "string", "example": "650adc7cdae223246162557f" }
-                }
-            },
-            "DairyIsRemoved": {
-                "type": "object",
-                "properties": {
-                    "message": { "type": "string", "example": "Product or exercise is removed" }
-                }
-            }
-        },
-        "securitySchemes": {
-            "Bearer": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
-        }
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.2",
+    "title": "Power Pulse API docs",
+    "description": "API documentation for project Power Pulse",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
     }
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json"],
+  "servers": [
+    { "url": "http://localhost:3000" },
+    { "url": "https://fitness-for-all-back-end.onrender.com" }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User endpoints"
+    },
+    {
+      "name": "Product",
+      "description": "Product endpoints"
+    },
+    {
+      "name": "Exercise",
+      "description": "Exercise endpoints"
+    },
+    {
+      "name": "Diary",
+      "description": "Diary endpoints"
+    }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "requestBody": {
+          "description": "Oпис параматрів запиту: **name** -string, ім'я користувача. **email**-string електронна пошта користувача. **password**-string зашифрований пароль має мітити 6 літер в різному регістрі і принаймні одну цифру та бути довжиною 7 символів.всі поля є обов'язковими. ",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Oпис параматрів відповіді: **token**-string використовується для зберігання стану авторизації користувача в системі, дозволяє здийснювати захищені запити до API.Токен є довільним рядком символів і генерується при кожній новій авторизації коритувача.., **name**-string ім'я користувача, **email**-string  електронна пошта користувача",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User with such email already exists",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User Login",
+        "parameters": [],
+        "requestBody": {
+          "description": " Опис параметрів запиту: **email**-string, required, улуктронна пошта користувача, обов'язковий параметр. **password**-string, required, зашифрований пароль користувача, обо'язковий параметр",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Oпис параматрів відповіді: **token**-string використовується для зберігання стану авторизації користувача в системі, дозволяє здийснювати захищені запити до API.Токен є довільним рядком символів і генерується при кожній новій авторизації коритувача..,  **email**-string  електронна пошта користувача",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get current user info",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+
+        "description": " Ендпоінт current використовується для отримання інформації про поточного авторизованого користувача. Цей ендпоінт повертає об'єкт, який містить інформацію про користувача, таку як ім'я, електронна пошта, ідентифікатор користувача тощо.Параметри: відсутні. Опис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /api/auth/sign-out з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.",
+
+        "responses": {
+          "200": {
+            "description": "JSON-об'єкт, який містить інформацію про поточного авторизованого користувача. Oпис параматрів відповіді:**id** - ObjectId, унікальний ідентифікатор користувача **name** - string, ім'я користувача. **email** - string, електронна пошта користувача.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Signs out user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Ендпоінт логауту - це механізм виходу з системи, який припиняє дію сесії користувача та знищує токен доступу, що був виданий при попередній аутентифікації.  Опис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /users/logout з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Signs out user"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "User signed out - успішний вихід з системи",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Signs out user"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - невалідний токен - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/params": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create User data",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Create user's object-data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation, user  data created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/update": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update User data",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Update user's object-data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation, user data updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/avatars": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update User avatar",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Update user's avatar",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAvatarRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation, user's avatar updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAvatarResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dairy/day/:date?": {
+      "get": {
+        "tags": ["Diary"],
+        "summary": "Get all activities per day. Default is today date",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "OK. У відповідь приходить об'єкт по заданому дню, по дефолту сьогоднішня дата",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getDayResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Date does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DayDoesntExist"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dairy/addExercise": {
+      "post": {
+        "tags": ["Diary"],
+        "summary": "Add exercise to single day",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Додати вправу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Add Exercise"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Exercise is added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExerciseIsAdded"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dairy/addProduct": {
+      "post": {
+        "tags": ["Diary"],
+        "summary": "Add product to single day",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Додати продукт. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Add Product"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product is added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductIsAdded"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dairy/removeProduct": {
+      "delete": {
+        "tags": ["Diary"],
+        "summary": "Remove product to single day by tag",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Видалити продукт по його тегу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product is removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DairyIsRemoved"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dairy/removeExercise": {
+      "delete": {
+        "tags": ["Diary"],
+        "summary": "Remove exercise to single day by tag",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Видалити вправу по її тегу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveExercise"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Exercise is removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DairyIsRemoved"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SignIn": {
+        "type": "object",
+        "required": ["name", "password", "email"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Mark"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Markqw1"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "mark@example.com"
+          }
+        }
+      },
+      "SignInDto": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Markqw1"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "mark@example.com"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "required": ["user", "token"],
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
+          },
+          "user": {
+            "type": "object",
+            "description": "User's object",
+            "required": ["name", "email"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name",
+                "example": "Mark"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              }
+            }
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["user", "token"],
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
+          },
+          "user": {
+            "type": "object",
+            "description": "User's object",
+            "required": ["email"],
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              }
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Bad request"
+          }
+        }
+      },
+      "CurrentResponse": {
+        "type": "object",
+        "required": ["user", "token"],
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
+          },
+          "user": {
+            "type": "object",
+            "description": "User's info",
+            "required": [
+              "_id",
+              "name",
+              "email",
+              "avatar",
+              "dailyTime",
+              "dailyСalories",
+              "bodyParameters"
+            ],
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "6505c930cd6008416cdfd45f"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name",
+                "example": "Mark"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "example": "mark@gmail.com"
+              },
+              "avatar": {
+                "type": "string",
+                "description": "User's avatar"
+              },
+              "dailyTime": {
+                "type": "integer",
+                "description": "User's dailyTime",
+                "example": 110
+              },
+              "dailyСalories": {
+                "type": "integer",
+                "description": "User's dailyTime",
+                "example": 2200
+              },
+              "bodyParameters": {
+                "type": "object",
+                "description": "User's bodyParameters",
+                "required": [
+                  "height",
+                  "currentWeight",
+                  "desiredWeight",
+                  "birthday",
+                  "blood",
+                  "sex",
+                  "levelActivity"
+                ],
+                "properties": {
+                  "height": {
+                    "type": "integer",
+                    "description": "User's height",
+                    "example": 150
+                  },
+                  "currentWeight": {
+                    "type": "integer",
+                    "description": "User's currentWeight",
+                    "example": 35
+                  },
+                  "desiredWeight": {
+                    "type": "integer",
+                    "description": "User's currentWeight",
+                    "example": 35
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "description": "User's birthday",
+                    "example": "2005-06-17T07:27:41.902Z"
+                  },
+                  "blood": {
+                    "type": "integer",
+                    "description": "User's blood",
+                    "enum": [1, 2, 3, 4],
+                    "example": 3
+                  },
+                  "sex": {
+                    "type": "string",
+                    "description": "User's sex",
+                    "enum": ["male", "female"],
+                    "example": "female"
+                  },
+                  "levelActivity": {
+                    "type": "integer",
+                    "description": "User's levelActivity",
+                    "enum": [1, 2, 3, 4, 5],
+                    "example": 2
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "AuthenticationFailed": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Description of the error",
+            "example": "Authentication failed. Please log in."
+          }
+        }
+      },
+      "Signs out user": {
+        "type": "object"
+      },
+      "ErrorNotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Not Found"
+          }
+        }
+      },
+      "SuccessfulCreateResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message",
+            "example": "User data was created successful"
+          }
+        }
+      },
+      "CreateUserDataRequest": {
+        "type": "object",
+        "required": [
+          "height",
+          "currentWeight",
+          "desiredWeight",
+          "birthday",
+          "blood",
+          "sex",
+          "levelActivity"
+        ],
+        "properties": {
+          "height": {
+            "type": "integer",
+            "description": "User's height",
+            "example": 150
+          },
+          "currentWeight": {
+            "type": "integer",
+            "description": "User's currentWeight",
+            "example": 35
+          },
+          "desiredWeight": {
+            "type": "integer",
+            "description": "User's currentWeight",
+            "example": 35
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "2005-06-17T07:27:41.902Z"
+          },
+          "blood": {
+            "type": "integer",
+            "description": "User's blood",
+            "enum": [1, 2, 3, 4],
+            "example": 3
+          },
+          "sex": {
+            "type": "string",
+            "description": "User's sex",
+            "enum": ["male", "female"],
+            "example": "female"
+          },
+          "levelActivity": {
+            "type": "integer",
+            "description": "User's levelActivity",
+            "enum": [1, 2, 3, 4, 5],
+            "example": 2
+          }
+        }
+      },
+      "getDayResponse": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "date": {
+            "type": "string",
+            "description": "today's date or needed date"
+          },
+          "owner": {
+            "type": "string",
+            "description": "User's id",
+            "example": "650ab7a1d815bb32d3dbec27"
+          },
+          "exercises": {
+            "type": "array",
+            "description": "Exercises array",
+            "example": [{ "Exercise": "1" }, { "Exercise": "2" }]
+          },
+          "products": {
+            "type": "array",
+            "description": "Products array",
+            "example": [{ "Product": "1" }, { "Product": "2" }]
+          }
+        }
+      },
+      "DayDoesntExist": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Day not found",
+            "example": "Day not found"
+          }
+        }
+      },
+      "Add Product": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "required": false,
+            "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
+            "example": "2023-09-20"
+          },
+          "exercise": {
+            "type": "object",
+            "required": ["name", "amount", "calories"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Продукт 1"
+              },
+              "amount": {
+                "type ": "integer",
+                "example": "30",
+                "description": "Мінімум 1"
+              },
+              "calories": {
+                "type ": "integer",
+                "example": "100",
+                "description": "Мінімум 1"
+              }
+            }
+          }
+        }
+      },
+      "Add Exercise": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "required": false,
+            "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
+            "example": "2023-09-20"
+          },
+          "exercise": {
+            "type": "object",
+            "required": ["name", "duration", "calories"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Вправа 1"
+              },
+              "duration": {
+                "type ": "integer",
+                "example": "30",
+                "description": "Мінімум 1"
+              },
+              "calories": {
+                "type ": "integer",
+                "example": "100",
+                "description": "Мінімум 1"
+              }
+            }
+          }
+        }
+      },
+      "ExerciseIsAdded": {
+        "type": "object",
+        "required": ["name", "duration", "calories"],
+        "properties": {
+          "exercise": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "required": true,
+                "example": "Вправа 1"
+              },
+              "duration": {
+                "type ": "integer",
+                "required": true,
+                "example": "30",
+                "description": "Мінімум 1"
+              },
+              "calories": {
+                "type ": "integer",
+                "required": true,
+                "example": "100",
+                "description": "Мінімум 1"
+              }
+            }
+          }
+        }
+      },
+      "ProductIsAdded": {
+        "type": "object",
+        "required": ["name", "amount", "calories"],
+        "properties": {
+          "exercise": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Продукт 1"
+              },
+              "amount": {
+                "type ": "integer",
+                "example": "30",
+                "description": "Мінімум 1"
+              },
+              "calories": {
+                "type ": "integer",
+                "example": "100",
+                "description": "Мінімум 1"
+              }
+            }
+          }
+        }
+      },
+      "RemoveProduct": {
+        "type": "object",
+        "required": ["productId"],
+
+        "properties": {
+          "date": {
+            "type": "string",
+            "required": false,
+            "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
+            "example": "2023-09-20"
+          },
+          "productId": {
+            "type": "string",
+            "example": "650adc7cdae223246162557f"
+          }
+        }
+      },
+      "RemoveExercise": {
+        "type": "object",
+        "required": ["productId"],
+
+        "properties": {
+          "date": {
+            "type": "string",
+            "required": false,
+            "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
+            "example": "2023-09-20"
+          },
+          "exerciseId": {
+            "type": "string",
+            "example": "650adc7cdae223246162557f"
+          }
+        }
+      },
+      "DairyIsRemoved": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Product or exercise is removed"
+          }
+        }
+      },
+      "UserAvatarRequest": {
+        "type": "object",
+        "required": ["avatar"],
+        "properties": {
+          "avatar": {
+            "type": "file",
+            "description": "User's avatar"
+          }
+        }
+      },
+      "UserAvatarResponse": {
+        "type": "object",
+        "properties": {
+          "avatarUrl": {
+            "type": "string",
+            "description": "today's date or needed date",
+            "example": "avatars\\650c1de94860d6d0172c4b63_1676295806122712757.png"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
 }
