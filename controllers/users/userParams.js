@@ -16,7 +16,7 @@ const userParams = async (req, res) => {
     },
     {
       new: true,
-      select: "-createdAt -updatedAt -password",
+      select: "-_id -createdAt -updatedAt -password",
     }
   );
 
