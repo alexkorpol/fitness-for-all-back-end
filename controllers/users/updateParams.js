@@ -3,20 +3,42 @@ const { calculateLifeStyle } = require("../../helpers");
 
 const updateParams = async (req, res) => {
   const { _id } = req.user;
+  const {
+    name,
+    height,
+    currentWeight,
+    desiredWeight,
+    birthday,
+    blood,
+    sex,
+    levelActivity,
+  } = req.body;
+
   const dailyRateCalories = calculateLifeStyle(req.body);
   const dailySportMin = 110;
-  const newUser = await User.findByIdAndUpdate(
-    _id,
-    {
-      bodyData: { ...req.body },
-      dailyRateCalories,
-      dailySportMin,
+  const userData = {
+    name,
+    dailyRateCalories,
+    dailySportMin,
+    bodyData: {
+      height,
+      currentWeight,
+      desiredWeight,
+      birthday,
+      blood,
+      sex,
+      levelActivity,
     },
-    {
-      new: true,
-      select: "-_id -createdAt -updatedAt -password",
-    }
-  );
+  };
+
+  if (req.file) {
+    userData.avatarURL = req.file.path;
+  }
+
+  const newUser = await User.findByIdAndUpdate(_id, userData, {
+    new: true,
+    select: "-_id -createdAt -updatedAt -password",
+  });
 
   res.json(newUser);
 };

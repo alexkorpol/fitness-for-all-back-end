@@ -258,9 +258,9 @@
           "description": "Update user's object-data",
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateUserDataRequest"
+                "$ref": "#/components/schemas/UpdateUserDataRequest"
               }
             }
           }
@@ -272,67 +272,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CurrentResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Validation error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequest"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Bearer auth failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthenticationFailed"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users/avatars": {
-      "patch": {
-        "tags": ["User"],
-        "summary": "Update User avatar",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "Update user's avatar",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/UserAvatarRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation, user's avatar updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserAvatarResponse"
                 }
               }
             }
@@ -1154,7 +1093,8 @@
           "birthday",
           "blood",
           "sex",
-          "levelActivity"
+          "levelActivity",
+          "avatar"
         ],
         "properties": {
           "height": {
@@ -1194,6 +1134,73 @@
             "description": "User's levelActivity",
             "enum": [1, 2, 3, 4, 5],
             "example": 2
+          },
+          "avatar": {
+            "type": "file",
+            "description": "User's avatar"
+          }
+        }
+      },
+      "UpdateUserDataRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "height",
+          "currentWeight",
+          "desiredWeight",
+          "birthday",
+          "blood",
+          "sex",
+          "levelActivity",
+          "avatar"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Mark"
+          },
+          "height": {
+            "type": "integer",
+            "description": "User's height",
+            "example": 150
+          },
+          "currentWeight": {
+            "type": "integer",
+            "description": "User's currentWeight",
+            "example": 35
+          },
+          "desiredWeight": {
+            "type": "integer",
+            "description": "User's currentWeight",
+            "example": 35
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "2005-06-17T07:27:41.902Z"
+          },
+          "blood": {
+            "type": "integer",
+            "description": "User's blood",
+            "enum": [1, 2, 3, 4],
+            "example": 3
+          },
+          "sex": {
+            "type": "string",
+            "description": "User's sex",
+            "enum": ["male", "female"],
+            "example": "female"
+          },
+          "levelActivity": {
+            "type": "integer",
+            "description": "User's levelActivity",
+            "enum": [1, 2, 3, 4, 5],
+            "example": 2
+          },
+          "avatar": {
+            "type": "file",
+            "description": "User's avatar"
           }
         }
       },
@@ -1503,26 +1510,6 @@
           "message": {
             "type": "string",
             "example": "Product or exercise is removed"
-          }
-        }
-      },
-      "UserAvatarRequest": {
-        "type": "object",
-        "required": ["avatar"],
-        "properties": {
-          "avatar": {
-            "type": "file",
-            "description": "User's avatar"
-          }
-        }
-      },
-      "UserAvatarResponse": {
-        "type": "object",
-        "properties": {
-          "avatarUrl": {
-            "type": "string",
-            "description": "today's date or needed date",
-            "example": "avatars\\650c1de94860d6d0172c4b63_1676295806122712757.png"
           }
         }
       },
