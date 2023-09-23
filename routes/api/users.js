@@ -9,6 +9,7 @@ const {
   joiRegisterSchema,
   joiLoginSchema,
   joiUserParamsSchema,
+  joiUpdateParamsSchema,
 } = require("../../models/user");
 
 const { users: ctrl } = require("../../controllers");
@@ -41,16 +42,17 @@ router.post(
 router.patch(
   "/update",
   auth,
-  validation(joiUserParamsSchema),
+  upload.single("avatar"),
+  validation(joiUpdateParamsSchema),
   ctrlWrapper(ctrl.updateParams)
 );
 
 //  updateAvatar
-router.patch(
-  "/avatars",
-  auth,
-  upload.single("avatar"),
-  ctrlWrapper(ctrl.updateAvatar)
-);
+// router.patch(
+//   "/avatars",
+//   auth,
+//   upload.single("avatar"),
+//   ctrlWrapper(ctrl.updateAvatar)
+// );
 
 module.exports = router;
