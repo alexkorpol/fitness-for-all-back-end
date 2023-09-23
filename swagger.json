@@ -104,7 +104,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginRequest"
+                  "$ref": "#/components/schemas/CurrentResponse"
                 }
               }
             }
@@ -880,109 +880,104 @@
       },
       "CurrentResponse": {
         "type": "object",
-        "required": ["user", "token"],
+        "description": "User's info",
+        "required": [
+          "bodyData",
+          "_id",
+          "name",
+          "email",
+          "avatarUrl",
+          "token",
+          "dailyRateCalories",
+          "dailySportMin"
+        ],
         "properties": {
+          "bodyData": {
+            "type": "object",
+            "description": "User's bodyParameters",
+            "required": [
+              "height",
+              "currentWeight",
+              "desiredWeight",
+              "birthday",
+              "blood",
+              "sex",
+              "levelActivity"
+            ],
+            "properties": {
+              "height": {
+                "type": "integer",
+                "description": "User's height",
+                "example": 150
+              },
+              "currentWeight": {
+                "type": "integer",
+                "description": "User's currentWeight",
+                "example": 35
+              },
+              "desiredWeight": {
+                "type": "integer",
+                "description": "User's currentWeight",
+                "example": 35
+              },
+              "birthday": {
+                "type": "string",
+                "description": "User's birthday",
+                "example": "2005-06-17T07:27:41.902Z"
+              },
+              "blood": {
+                "type": "integer",
+                "description": "User's blood",
+                "enum": [1, 2, 3, 4],
+                "example": 3
+              },
+              "sex": {
+                "type": "string",
+                "description": "User's sex",
+                "enum": ["male", "female"],
+                "example": "female"
+              },
+              "levelActivity": {
+                "type": "integer",
+                "description": "User's levelActivity",
+                "enum": [1, 2, 3, 4, 5],
+                "example": 2
+              }
+            }
+          },
+          "_id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "6505c930cd6008416cdfd45f"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Mark"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "mark@gmail.com"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "description": "User's avatar"
+          },
           "token": {
             "type": "string",
             "description": "User's token",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
           },
-          "user": {
-            "type": "object",
-            "description": "User's info",
-            "required": [
-              "_id",
-              "name",
-              "email",
-              "avatarUrl",
-              "dailySportMin",
-              "dailyRateCalories",
-              "bodyData"
-            ],
-            "properties": {
-              "_id": {
-                "type": "string",
-                "description": "User's id",
-                "example": "6505c930cd6008416cdfd45f"
-              },
-              "name": {
-                "type": "string",
-                "description": "User's name",
-                "example": "Mark"
-              },
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "example": "mark@gmail.com"
-              },
-              "avatarUrl": {
-                "type": "string",
-                "description": "User's avatar"
-              },
-              "dailySportMin": {
-                "type": "integer",
-                "description": "User's dailyTime",
-                "example": 110
-              },
-              "dailyRateCalories": {
-                "type": "integer",
-                "description": "User's dailyTime",
-                "example": 2200
-              },
-              "bodyData": {
-                "type": "object",
-                "description": "User's bodyParameters",
-                "required": [
-                  "height",
-                  "currentWeight",
-                  "desiredWeight",
-                  "birthday",
-                  "blood",
-                  "sex",
-                  "levelActivity"
-                ],
-                "properties": {
-                  "height": {
-                    "type": "integer",
-                    "description": "User's height",
-                    "example": 150
-                  },
-                  "currentWeight": {
-                    "type": "integer",
-                    "description": "User's currentWeight",
-                    "example": 35
-                  },
-                  "desiredWeight": {
-                    "type": "integer",
-                    "description": "User's currentWeight",
-                    "example": 35
-                  },
-                  "birthday": {
-                    "type": "string",
-                    "description": "User's birthday",
-                    "example": "2005-06-17T07:27:41.902Z"
-                  },
-                  "blood": {
-                    "type": "integer",
-                    "description": "User's blood",
-                    "enum": [1, 2, 3, 4],
-                    "example": 3
-                  },
-                  "sex": {
-                    "type": "string",
-                    "description": "User's sex",
-                    "enum": ["male", "female"],
-                    "example": "female"
-                  },
-                  "levelActivity": {
-                    "type": "integer",
-                    "description": "User's levelActivity",
-                    "enum": [1, 2, 3, 4, 5],
-                    "example": 2
-                  }
-                }
-              }
-            }
+          "dailyRateCalories": {
+            "type": "integer",
+            "description": "User's dailyTime",
+            "example": 2200
+          },
+          "dailySportMin": {
+            "type": "integer",
+            "description": "User's dailyTime",
+            "example": 110
           }
         }
       },
@@ -1151,8 +1146,7 @@
           "birthday",
           "blood",
           "sex",
-          "levelActivity",
-          "avatar"
+          "levelActivity"
         ],
         "properties": {
           "name": {
@@ -1206,118 +1200,150 @@
       },
       "getTraining": {
         "type": "object",
-        "required": [
-          "_id",
-          "bodyPart",
-          "equipment",
-          "gifUrl",
-          "name",
-          "target",
-          "burnedCalories",
-          "time"
-        ],
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "User's id",
-            "example": "65053e58a07e502d3e5d703f"
-          },
-          "bodyPart": {
-            "type": "string",
-            "example": "waist"
-          },
-          "equipment": {
-            "type": "string",
-            "example": "assisted"
-          },
-          "gifUrl": {
-            "type": "string",
-            "example": "https://res.cloudinary.com/ditdqzoio/image/upload/v1687127066/exercises/0011.gif"
-          },
-          "name": {
-            "type": "string",
-            "example": "assisted hanging knee raise"
-          },
-          "target": {
-            "type": "string",
-            "example": "abs"
-          },
-          "burnedCalories": {
-            "type": "number",
-            "example": 49
-          },
-          "time": {
-            "type": "number",
-            "example": 3
+          "getExercises": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "_id",
+                "bodyPart",
+                "equipment",
+                "gifUrl",
+                "name",
+                "target",
+                "burnedCalories",
+                "time"
+              ],
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "User's id",
+                  "example": "65053e58a07e502d3e5d703f"
+                },
+                "bodyPart": {
+                  "type": "string",
+                  "example": "waist"
+                },
+                "equipment": {
+                  "type": "string",
+                  "example": "assisted"
+                },
+                "gifUrl": {
+                  "type": "string",
+                  "example": "https://res.cloudinary.com/ditdqzoio/image/upload/v1687127066/exercises/0011.gif"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "assisted hanging knee raise"
+                },
+                "target": {
+                  "type": "string",
+                  "example": "abs"
+                },
+                "burnedCalories": {
+                  "type": "number",
+                  "example": 49
+                },
+                "time": {
+                  "type": "number",
+                  "example": 3
+                }
+              }
+            }
           }
         }
       },
       "getBodyParts": {
         "type": "object",
-        "required": ["_id", "filter", "name", "imgURL"],
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "User's id",
-            "example": "65053e65a07e502d3e5d756d"
-          },
-          "filter": {
-            "type": "string",
-            "example": "Body parts"
-          },
-          "name": {
-            "type": "string",
-            "example": "upper legs"
-          },
-          "imgURL": {
-            "type": "string",
-            "example": "https://res.cloudinary.com/dn4iogcf4/image/upload/v1694469563/categories/upper_legs_dlkfwx.jpg"
+          "getAllBodyParts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["_id", "filter", "name", "imgURL"],
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "User's id",
+                  "example": "65053e65a07e502d3e5d756d"
+                },
+                "filter": {
+                  "type": "string",
+                  "example": "Body parts"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "upper legs"
+                },
+                "imgURL": {
+                  "type": "string",
+                  "example": "https://res.cloudinary.com/dn4iogcf4/image/upload/v1694469563/categories/upper_legs_dlkfwx.jpg"
+                }
+              }
+            }
           }
         }
       },
       "getMuscle": {
         "type": "object",
-        "required": ["_id", "filter", "name", "imgURL"],
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "User's id",
-            "example": "65053e65a07e502d3e5d7591"
-          },
-          "filter": {
-            "type": "string",
-            "example": "Muscles"
-          },
-          "name": {
-            "type": "string",
-            "example": "delts"
-          },
-          "imgURL": {
-            "type": "string",
-            "example": "https://res.cloudinary.com/dn4iogcf4/image/upload/v1694469568/categories/delts_ui5hy5.jpg"
+          "getMuscules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["_id", "filter", "name", "imgURL"],
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "User's id",
+                  "example": "65053e65a07e502d3e5d7591"
+                },
+                "filter": {
+                  "type": "string",
+                  "example": "Muscles"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "delts"
+                },
+                "imgURL": {
+                  "type": "string",
+                  "example": "https://res.cloudinary.com/dn4iogcf4/image/upload/v1694469568/categories/delts_ui5hy5.jpg"
+                }
+              }
+            }
           }
         }
       },
       "getEquipments": {
         "type": "object",
-        "required": ["_id", "filter", "name", "imgURL"],
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "User's id",
-            "example": "65053e65a07e502d3e5d7578"
-          },
-          "filter": {
-            "type": "string",
-            "example": "Equipment"
-          },
-          "name": {
-            "type": "string",
-            "example": "hammer"
-          },
-          "imgURL": {
-            "type": "string",
-            "example": "https://res.cloudinary.com/dn4iogcf4/image/upload/v1694553685/hammer_rkogqp.jpg"
+          "getEquipments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["_id", "filter", "name", "imgURL"],
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "User's id",
+                  "example": "65053e65a07e502d3e5d7578"
+                },
+                "filter": {
+                  "type": "string",
+                  "example": "Equipment"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "hammer"
+                },
+                "imgURL": {
+                  "type": "string",
+                  "example": "https://res.cloudinary.com/dn4iogcf4/image/upload/v1694553685/hammer_rkogqp.jpg"
+                }
+              }
+            }
           }
         }
       },

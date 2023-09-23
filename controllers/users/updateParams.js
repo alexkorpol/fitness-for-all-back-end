@@ -32,12 +32,12 @@ const updateParams = async (req, res) => {
   };
 
   if (req.file) {
-    userData.avatarURL = req.file.path;
+    userData.avatarUrl = req.file.path;
   }
 
   const newUser = await User.findByIdAndUpdate(_id, userData, {
     new: true,
-    select: "-_id -createdAt -updatedAt -password",
+    select: "-createdAt -updatedAt -password",
   });
 
   res.json(newUser);
