@@ -12,6 +12,7 @@ const updateParams = async (req, res) => {
     blood,
     sex,
     levelActivity,
+    avatarUrl,
   } = req.body;
 
   const dailyRateCalories = calculateLifeStyle(req.body);
@@ -28,6 +29,7 @@ const updateParams = async (req, res) => {
       blood,
       sex,
       levelActivity,
+      avatarUrl,
     },
   };
 
