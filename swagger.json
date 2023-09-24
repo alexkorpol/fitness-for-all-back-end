@@ -528,7 +528,7 @@
         }
       }
     },
-    "/dairy/day/:date?": {
+    "/dairy": {
       "get": {
         "tags": ["Diary"],
         "summary": "Get all activities per day. Default is today date",
@@ -561,57 +561,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DayDoesntExist"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/dairy/addExercise": {
-      "post": {
-        "tags": ["Diary"],
-        "summary": "Add exercise to single day",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "Додати вправу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Add Exercise"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Exercise is added",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExerciseIsAdded"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Bearer auth failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthenticationFailed"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
                 }
               }
             }
@@ -670,6 +619,57 @@
         }
       }
     },
+    "/dairy/addExercise": {
+      "post": {
+        "tags": ["Diary"],
+        "summary": "Add exercise to single day",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Додати вправу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Add Exercise"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Exercise is added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExerciseIsAdded"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/dairy/removeProduct": {
       "delete": {
         "tags": ["Diary"],
@@ -693,7 +693,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DairyIsRemoved"
+                  "$ref": "#/components/schemas/ProductIsRemoved"
                 }
               }
             }
@@ -744,7 +744,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DairyIsRemoved"
+                  "$ref": "#/components/schemas/ExerciseIsRemoved"
                 }
               }
             }
@@ -1350,25 +1350,60 @@
       "getDayResponse": {
         "type": "object",
         "properties": {
-          "_id": { "type": "string" },
+          "_id": { "type": "string", "example": "65108cb20d9c1353b40f8b22" },
           "date": {
             "type": "string",
-            "description": "today's date or needed date"
+            "description": "today's date or needed date",
+            "example": "2023-09-24"
           },
           "owner": {
             "type": "string",
             "description": "User's id",
-            "example": "650ab7a1d815bb32d3dbec27"
+            "example": "651079ca40dd3530b59e126e"
           },
           "exercises": {
             "type": "array",
             "description": "Exercises array",
-            "example": [{ "Exercise": "1" }, { "Exercise": "2" }]
+            "items": {
+              "type": "object",
+              "required": ["name", "duration", "_id"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Run"
+                },
+                "duration": {
+                  "type": "integer",
+                  "example": 30
+                },
+                "_id": {
+                  "type": "string",
+                  "example": "65108cb20d9c1353b40f8b24"
+                }
+              }
+            }
           },
           "products": {
             "type": "array",
             "description": "Products array",
-            "example": [{ "Product": "1" }, { "Product": "2" }]
+            "items": {
+              "type": "object",
+              "required": ["name", "calories", "_id"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Pepsi"
+                },
+                "calories": {
+                  "type": "integer",
+                  "example": 100
+                },
+                "_id": {
+                  "type": "string",
+                  "example": "65108d3d0d9c1353b40f8b30"
+                }
+              }
+            }
           }
         }
       },
@@ -1389,15 +1424,15 @@
             "type": "string",
             "required": false,
             "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-            "example": "2023-09-20"
+            "example": "2023-09-24"
           },
-          "exercise": {
+          "product": {
             "type": "object",
             "required": ["name", "amount", "calories"],
             "properties": {
               "name": {
                 "type": "string",
-                "example": "Продукт 1"
+                "example": "Pepsi"
               },
               "amount": {
                 "type ": "integer",
@@ -1420,7 +1455,7 @@
             "type": "string",
             "required": false,
             "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-            "example": "2023-09-20"
+            "example": "2023-09-24"
           },
           "exercise": {
             "type": "object",
@@ -1428,7 +1463,7 @@
             "properties": {
               "name": {
                 "type": "string",
-                "example": "Вправа 1"
+                "example": "Run"
               },
               "duration": {
                 "type ": "integer",
@@ -1448,13 +1483,17 @@
         "type": "object",
         "required": ["name", "duration", "calories"],
         "properties": {
+          "message": {
+            "type": "string",
+            "example": "Exercise added to the day 2023-09-24"
+          },
           "exercise": {
             "type": "object",
             "properties": {
               "name": {
                 "type": "string",
                 "required": true,
-                "example": "Вправа 1"
+                "example": "Run"
               },
               "duration": {
                 "type ": "integer",
@@ -1476,12 +1515,16 @@
         "type": "object",
         "required": ["name", "amount", "calories"],
         "properties": {
-          "exercise": {
+          "message": {
+            "type": "string",
+            "example": "Product added to the day 2023-09-24"
+          },
+          "product": {
             "type": "object",
             "properties": {
               "name": {
                 "type": "string",
-                "example": "Продукт 1"
+                "example": "Pepsi"
               },
               "amount": {
                 "type ": "integer",
@@ -1505,11 +1548,11 @@
             "type": "string",
             "required": false,
             "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-            "example": "2023-09-20"
+            "example": "2023-09-24"
           },
           "productId": {
             "type": "string",
-            "example": "650adc7cdae223246162557f"
+            "example": "65108d3d0d9c1353b40f8b30"
           }
         }
       },
@@ -1522,20 +1565,29 @@
             "type": "string",
             "required": false,
             "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-            "example": "2023-09-20"
+            "example": "2023-09-24"
           },
           "exerciseId": {
             "type": "string",
-            "example": "650adc7cdae223246162557f"
+            "example": "65108cb20d9c1353b40f8b24"
           }
         }
       },
-      "DairyIsRemoved": {
+      "ExerciseIsRemoved": {
         "type": "object",
         "properties": {
           "message": {
             "type": "string",
-            "example": "Product or exercise is removed"
+            "example": "Exercise removed"
+          }
+        }
+      },
+      "ProductIsRemoved": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Product removed"
           }
         }
       },

@@ -47,12 +47,4 @@ router.patch(
   ctrlWrapper(ctrl.updateParams)
 );
 
-//  updateAvatar
-// router.patch(
-//   "/avatars",
-//   auth,
-//   upload.single("avatar"),
-//   ctrlWrapper(ctrl.updateAvatar)
-// );
-
 module.exports = router;

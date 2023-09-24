@@ -1,6 +1,5 @@
 const { User } = require("../../models");
 const jwt = require("jsonwebtoken");
-const gravatar = require("gravatar");
 const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
@@ -10,8 +9,8 @@ const register = async (req, res) => {
     res.status(409).json({ message: "Message email in use" });
     return;
   }
-  const avatarUrl = gravatar.url(email);
-  const newUser = new User({ name, email, password, avatarUrl });
+
+  const newUser = new User({ name, email, password });
   await newUser.setPassword(password);
 
   await newUser.save();
