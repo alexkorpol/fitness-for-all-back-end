@@ -2,19 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const { auth } = require("../../middlewares");
-
 const { ctrlWrapper } = require("../../helpers");
+const { exercises: ctrl } = require("../../controllers");
 
-const {
-  getAllExercises,
-  getBodyParts,
-  getAllMuscules,
-  getAllEquipments,
-} = require("../../controllers/exercises");
-
-router.get("/training", auth, ctrlWrapper(getAllExercises));
-router.get("/bodyparts", auth, ctrlWrapper(getBodyParts));
-router.get("/muscules", auth, ctrlWrapper(getAllMuscules));
-router.get("/equipments", auth, ctrlWrapper(getAllEquipments));
+router.get("/training", auth, ctrlWrapper(ctrl.getAllExercises));
+router.get("/bodyparts", auth, ctrlWrapper(ctrl.getBodyParts));
+router.get("/muscules", auth, ctrlWrapper(ctrl.getAllMuscules));
+router.get("/equipments", auth, ctrlWrapper(ctrl.getAllEquipments));
 
 module.exports = router;
