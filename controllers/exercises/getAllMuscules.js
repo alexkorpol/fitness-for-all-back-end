@@ -1,7 +1,7 @@
-const Muscules = require("../../models/muscule");
+const { Filter } = require("../../models");
 
 const getAllMuscules = async (req, res) => {
-  const getMuscules = await Muscules.find({ filter: "Muscles" });
+  const getMuscules = await Filter.find({ filter: "Muscles" });
   if (!getMuscules) {
     res.status(404).json({ message: "Not found" });
     return;

@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
+const { handleMongooseError } = require("../helpers");
 
 const daySchema = new Schema(
   {
@@ -40,6 +41,8 @@ const daySchema = new Schema(
   { versionKey: false }
 );
 
+daySchema.post("save", handleMongooseError);
+
 const Day = model("Day", daySchema);
 
 const schemaAddExercise = Joi.object({
@@ -64,10 +67,12 @@ const schemaRemoveExercise = Joi.object({
   date: Joi.string(),
   exerciseId: Joi.string().required(),
 });
+
 const schemaRemoveProduct = Joi.object({
   date: Joi.string(),
   productId: Joi.string().required(),
 });
+
 module.exports = {
   Day,
   schemaAddExercise,

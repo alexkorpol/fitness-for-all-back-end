@@ -1,7 +1,7 @@
-const Body = require("../../models/bodyPart");
+const { Filter } = require("../../models");
 
 const getBodyParts = async (req, res, next) => {
-  const getAllBodyParts = await Body.find({ filter: "Body parts" });
+  const getAllBodyParts = await Filter.find({ filter: "Body parts" });
   if (!getAllBodyParts) {
     res.status(404).json({ message: "Not found" });
     return;
