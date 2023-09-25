@@ -1,9 +1,13 @@
-const { User } = require('./user');
-const { Product } = require('./product');
-const { Day } = require('./diary');
+const { User } = require("./user");
+const { Day } = require("./diary");
+const Product = require("./product");
+const Filter = require("./filter");
+const Exercise = require("./exercise");
 
 module.exports = {
-    User,
-    Product,
-    Day,
+  User,
+  Product,
+  Day,
+  Filter,
+  Exercise,
 };

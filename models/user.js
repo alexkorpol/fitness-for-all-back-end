@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const bcrypt = require("bcryptjs");
+const { handleMongooseError } = require("../helpers/");
 
 const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,}/;
@@ -191,6 +192,8 @@ const joiUpdateParamsSchema = Joi.object({
     "any.required": "Level activity is a required field",
   }),
 });
+
+userSchema.post("save", handleMongooseError);
 
 const User = model("user", userSchema);
 

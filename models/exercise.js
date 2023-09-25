@@ -1,31 +1,20 @@
 const { Schema, model } = require("mongoose");
+const { handleMongooseError } = require("../helpers");
 
 const exerciseSchema = new Schema(
   {
-    bodyPart: {
-      type: String,
-    },
-    equipment: {
-      type: String,
-    },
-    gifUrl: {
-      type: String,
-    },
-    name: {
-      type: String,
-    },
-    target: {
-      type: String,
-    },
-    burnedCalories: {
-      type: Number,
-    },
-    time: {
-      type: Number,
-    },
+    bodyPart: String,
+    equipment: String,
+    gifUrl: String,
+    name: String,
+    target: String,
+    burnedCalories: Number,
+    time: Number,
   },
   { versionKey: false }
 );
+
+exerciseSchema.post("save", handleMongooseError);
 
 const Exercise = model("exercise", exerciseSchema);
 
