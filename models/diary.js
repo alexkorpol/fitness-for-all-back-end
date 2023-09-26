@@ -13,38 +13,35 @@ const daySchema = new Schema(
             ref: 'users',
             required: true,
         },
-        exercises: [
-            {
-                name: {
-                    type: String,
-                    required: true,
+        exercises: {
+            type: [
+                {
+                    exerciseId: {
+                        type: Schema.Types.ObjectId,
+                        ref: 'exercise',
+                        required: true,
+                    },
+                    duration: { type: Number, required: true },
+                    calories: { type: Number, required: true },
                 },
-                duration: {
-                    type: Number,
-                    required: true,
+            ],
+            default: [],
+            required: true,
+        },
+        products: {
+            type: [
+                {
+                    productId: {
+                        type: Schema.Types.ObjectId,
+                        ref: 'product',
+                    },
+                    amount: { type: Number, required: true },
+                    calories: { type: Number, required: true },
                 },
-                calories: {
-                    type: Number,
-                    required: true,
-                },
-            },
-        ],
-        products: [
-            {
-                name: {
-                    type: String,
-                    required: true,
-                },
-                amount: {
-                    type: Number,
-                    required: true,
-                },
-                calories: {
-                    type: Number,
-                    required: true,
-                },
-            },
-        ],
+            ],
+            default: [],
+            required: true,
+        },
     },
     { versionKey: false }
 );
@@ -55,20 +52,17 @@ const Day = model('Day', daySchema);
 
 const schemaAddExercise = Joi.object({
     date: Joi.string(),
-    exercise: Joi.object({
-        name: Joi.string().required(),
-        duration: Joi.number().min(1).required(),
-        calories: Joi.number().min(1).required(),
-    }).required(),
+
+    exerciseId: Joi.string().required(),
+    duration: Joi.number().min(1).required(),
+    calories: Joi.number().min(1).required(),
 });
 
 const schemaAddProduct = Joi.object({
     date: Joi.string(),
-    product: Joi.object({
-        name: Joi.string().required(),
-        amount: Joi.number().min(1).required(),
-        calories: Joi.number().min(1).required(),
-    }).required(),
+    productId: Joi.string().required(),
+    amount: Joi.number().min(1).required(),
+    calories: Joi.number().min(1).required(),
 });
 
 const schemaRemoveExercise = Joi.object({
