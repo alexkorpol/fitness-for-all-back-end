@@ -1,8 +1,14 @@
 const { Exercise } = require("../../models");
 const HttpError = require("../../helpers/HttpError");
+const { Forbidden } = require("http-errors");
 
 const getAllExercises = async (req, res) => {
   const { bodyPart, equipment, target } = req.query;
+
+  if (JSON.stringify(req.user.bodyData) === "{}") {
+    throw new Forbidden("bodyData absent in user collection");
+  }
+
   const query = {};
 
   bodyPart && (query.bodyPart = bodyPart);

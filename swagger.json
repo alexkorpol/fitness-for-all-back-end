@@ -345,7 +345,7 @@
     "/products": {
       "get": {
         "tags": ["Product"],
-        "summary": " A private endpoint, which is used by an authorized body to produce a product, is permissible for the type of blood before the injection of a fence.",
+        "summary": "Get Products list",
         "parameters": [
           {
             "in": "query",
@@ -356,8 +356,31 @@
           {
             "in": "query",
             "name": "category",
-            "type": "string",
-            "example": "fish"
+            "schema": {
+              "type": "string",
+              "enum": [
+                "alcoholic drinks",
+                "berries",
+                "cereals",
+                "dairy",
+                "dried fruits",
+                "eggs",
+                "fish",
+                "flour",
+                "fruits",
+                "meat",
+                "mushrooms",
+                "nuts",
+                "oils and fats",
+                "poppy",
+                "sausage",
+                "seeds",
+                "sesame",
+                "soft drinks",
+                "vegetables and herbs"
+              ]
+            },
+            "description": "Select category for search products"
           },
           {
             "in": "query",
@@ -381,6 +404,16 @@
               }
             }
           },
+          "403": {
+            "description": "Not found BodyData",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotBodyData"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not found",
             "content": {
@@ -394,7 +427,7 @@
         }
       }
     },
-    "/exercises/training": {
+    "/exercises": {
       "get": {
         "tags": ["Exercise"],
         "summary": "Get all exercises",
@@ -402,20 +435,89 @@
           {
             "in": "query",
             "name": "bodyPart",
-            "type": "string",
-            "example": "shoulders"
+            "schema": {
+              "type": "string",
+              "enum": [
+                "back",
+                "cardio",
+                "chest",
+                "lower arms",
+                "lower legs",
+                "neck",
+                "shoulders",
+                "upper arms",
+                "upper legs",
+                "waist"
+              ]
+            },
+            "description": "Select body part for search exercises by body part"
           },
           {
             "in": "query",
             "name": "equipment",
-            "type": "string",
-            "example": "cable"
+            "schema": {
+              "type": "string",
+              "enum": [
+                "body weight",
+                "cable",
+                "leverage machine",
+                "assisted",
+                "medicine ball",
+                "skierg machine",
+                "barbell",
+                "band",
+                "bosu ball",
+                "dumbbell",
+                "elliptical machine",
+                "ez barbell",
+                "hammer",
+                "kettlebell",
+                "olympic barbell",
+                "resistance band",
+                "roller",
+                "rope",
+                "sled machine",
+                "smith machine",
+                "stability ball",
+                "stationary bike",
+                "stepmill machine",
+                "tire",
+                "trap bar",
+                "upper body ergometer",
+                "weighted",
+                "wheel roller"
+              ]
+            },
+            "description": "Select equipment for search exercises by equipment"
           },
           {
             "in": "query",
             "name": "target",
-            "type": "string",
-            "example": "delts"
+            "schema": {
+              "type": "string",
+              "enum": [
+                "delts",
+                "abs",
+                "abductors",
+                "adductors",
+                "biceps",
+                "calves",
+                "forearms",
+                "glutes",
+                "hamstrings",
+                "cardiovascular",
+                "lats",
+                "levator scapulae",
+                "pectorals",
+                "quads",
+                "serratus anterior",
+                "spine",
+                "traps",
+                "triceps",
+                "upper back"
+              ]
+            },
+            "description": "Select target for search exercises by target"
           }
         ],
         "security": [{ "Bearer": [] }],
@@ -429,6 +531,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/getTraining"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not found BodyData",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNotBodyData"
                 }
               }
             }
@@ -547,15 +659,23 @@
         }
       }
     },
-    "/dairy": {
+    "/diary": {
       "get": {
         "tags": ["Diary"],
         "summary": "Get all activities per day. Default is today date",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "data",
+            "type": "string",
+            "description": "Select day",
+            "example": "26/09/2023"
+          }
+        ],
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
-            "description": "OK. У відповідь приходить об'єкт по заданому дню, по дефолту сьогоднішня дата",
+            "description": "OK. In response, the object on the given day comes, by default today's date",
             "content": {
               "application/json": {
                 "schema": {
@@ -587,14 +707,14 @@
         }
       }
     },
-    "/dairy/addProduct": {
+    "/diary/addProduct": {
       "post": {
         "tags": ["Diary"],
         "summary": "Add product to single day",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Додати продукт. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
+          "description": "Add a product. The date is not required, by default it looks for today's date",
           "required": true,
           "content": {
             "application/json": {
@@ -638,14 +758,14 @@
         }
       }
     },
-    "/dairy/addExercise": {
+    "/diary/addExercise": {
       "post": {
         "tags": ["Diary"],
         "summary": "Add exercise to single day",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Додати вправу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
+          "description": "Add an exercise. The date is not required, by default it looks for today's date",
           "required": true,
           "content": {
             "application/json": {
@@ -689,14 +809,14 @@
         }
       }
     },
-    "/dairy/removeProduct": {
+    "/diary/removeProduct": {
       "delete": {
         "tags": ["Diary"],
         "summary": "Remove product to single day by tag",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Видалити продукт по його тегу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
+          "description": "Delete a product by its tag. The date is not required, by default it looks for today's date",
           "required": true,
           "content": {
             "application/json": {
@@ -740,14 +860,14 @@
         }
       }
     },
-    "/dairy/removeExercise": {
+    "/diary/removeExercise": {
       "delete": {
         "tags": ["Diary"],
         "summary": "Remove exercise to single day by tag",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Видалити вправу по її тегу. Дата не обов'язкова, по дефолту шукає сьогоднішню дату",
+          "description": "Delete an exercise by its tag. The date is not required, by default it looks for today's date",
           "required": true,
           "content": {
             "application/json": {
@@ -1373,7 +1493,7 @@
           "date": {
             "type": "string",
             "description": "today's date or needed date",
-            "example": "2023-09-24"
+            "example": "26/09/2023"
           },
           "owner": {
             "type": "string",
@@ -1442,8 +1562,8 @@
           "date": {
             "type": "string",
             "required": false,
-            "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-            "example": "2023-09-24"
+            "description": "The default is today's date. Format DD/MM/YYYY",
+            "example": "26/09/2023"
           },
           "product": {
             "type": "object",
@@ -1456,12 +1576,12 @@
               "amount": {
                 "type ": "integer",
                 "example": "30",
-                "description": "Мінімум 1"
+                "description": "minimum 1"
               },
               "calories": {
                 "type ": "integer",
                 "example": "100",
-                "description": "Мінімум 1"
+                "description": "minimum 1"
               }
             }
           }
@@ -1473,8 +1593,8 @@
           "date": {
             "type": "string",
             "required": false,
-            "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-            "example": "2023-09-24"
+            "description": "The default is today's date. Format DD/MM/YYYY",
+            "example": "26/09/2023"
           },
           "exercise": {
             "type": "object",
@@ -1487,12 +1607,12 @@
               "duration": {
                 "type ": "integer",
                 "example": "30",
-                "description": "Мінімум 1"
+                "description": "minimum 1"
               },
               "calories": {
                 "type ": "integer",
                 "example": "100",
-                "description": "Мінімум 1"
+                "description": "minimum 1"
               }
             }
           }
@@ -1504,7 +1624,7 @@
         "properties": {
           "message": {
             "type": "string",
-            "example": "Exercise added to the day 2023-09-24"
+            "example": "Exercise added to the day 26/09/2023"
           },
           "exercise": {
             "type": "object",
@@ -1518,13 +1638,13 @@
                 "type ": "integer",
                 "required": true,
                 "example": "30",
-                "description": "Мінімум 1"
+                "description": "minimum 1"
               },
               "calories": {
                 "type ": "integer",
                 "required": true,
                 "example": "100",
-                "description": "Мінімум 1"
+                "description": "minimum 1"
               }
             }
           }
@@ -1536,7 +1656,7 @@
         "properties": {
           "message": {
             "type": "string",
-            "example": "Product added to the day 2023-09-24"
+            "example": "Product added to the day 26/09/2023"
           },
           "product": {
             "type": "object",
@@ -1548,12 +1668,12 @@
               "amount": {
                 "type ": "integer",
                 "example": "30",
-                "description": "Мінімум 1"
+                "description": "minimum 1"
               },
               "calories": {
                 "type ": "integer",
                 "example": "100",
-                "description": "Мінімум 1"
+                "description": "minimum 1"
               }
             }
           }
@@ -1566,8 +1686,8 @@
           "date": {
             "type": "string",
             "required": false,
-            "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-            "example": "2023-09-24"
+            "description": "The default is today's date. Format DD/MM/YYYY",
+            "example": "26/09/2023"
           },
           "productId": {
             "type": "string",
@@ -1583,8 +1703,8 @@
           "date": {
             "type": "string",
             "required": false,
-            "description": "По дефолту сьогоднішня дата. Формат YYYY-MM-DD",
-            "example": "2023-09-24"
+            "description": "The default is today's date. Format DD/MM/YYYY",
+            "example": "26/09/2023"
           },
           "exerciseId": {
             "type": "string",
@@ -1612,6 +1732,16 @@
       },
       "Signs out user": {
         "type": "object"
+      },
+      "ErrorNotBodyData": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "bodyData absent in user collection"
+          }
+        }
       }
     },
     "securitySchemes": {

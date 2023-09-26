@@ -1,7 +1,12 @@
 const { Product } = require("../../models");
+const { Forbidden } = require("http-errors");
 
 const getProducts = async (req, res) => {
   const { title, category, recommended } = req.query;
+
+  if (JSON.stringify(req.user.bodyData) === "{}") {
+    throw new Forbidden("bodyData absent in user collection");
+  }
 
   const { blood } = req.user.bodyData;
 
