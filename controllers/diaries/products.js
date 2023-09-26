@@ -3,14 +3,13 @@ const { HttpError, ctrlWrapper } = require('../../helpers');
 const moment = require('moment');
 
 const addProductToDay = async (req, res, next) => {
-    const { date = moment().format('YYYY-MM-DD'), product } = req.body;
+    const { date = moment().format('DD-MM-YYYY'), productId, amount, calories } = req.body;
     const { _id: owner } = req.user;
 
     try {
         if (date) {
             const currentDate = moment().startOf('day');
-            const inputDate = moment(date).startOf('day');
-
+            const inputDate = moment(date, 'DD-MM-YYYY').startOf('day');
             if (!currentDate.isAfter(inputDate) && !currentDate.isSame(inputDate, 'day')) {
                 return res.status(400).json({ message: 'Date has not yet arrived or not a suitable format' });
             }
@@ -21,11 +20,11 @@ const addProductToDay = async (req, res, next) => {
         if (!day) {
             day = await Day.create({ date, owner, exercises: [], products: [] });
         }
-        day.products.push(product);
+        day.products.push({ productId, amount, calories });
 
         await day.save();
 
-        res.status(201).json({ message: `Product added to the day ${date}`, product });
+        res.status(201).json({ message: `Product added to the day ${date}`, productId });
     } catch (error) {
         console.error(error);
         throw HttpError(500, 'Error adding product to day');
@@ -34,7 +33,7 @@ const addProductToDay = async (req, res, next) => {
 
 const removeProduct = async (req, res, next) => {
     const { _id: owner } = req.user;
-    const { productId, date = moment().format('YYYY-MM-DD') } = req.body;
+    const { productId, date = moment().format('DD-MM-YYYY') } = req.body;
 
     const day = await Day.findOne({ date, owner });
 

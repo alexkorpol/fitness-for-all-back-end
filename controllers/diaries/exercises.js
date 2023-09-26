@@ -1,16 +1,13 @@
 const { Day } = require('../../models/');
 const { HttpError, ctrlWrapper } = require('../../helpers');
 const moment = require('moment');
-
 const addExerciseToDay = async (req, res, next) => {
-    const { date = moment().format('YYYY-MM-DD'), exercise } = req.body;
+    const { date = moment().format('DD-MM-YYYY'), exerciseId, duration, calories } = req.body;
     const { _id: owner } = req.user;
-
     try {
         if (date) {
             const currentDate = moment().startOf('day');
-            const inputDate = moment(date).startOf('day');
-
+            const inputDate = moment(date, 'DD-MM-YYYY').startOf('day');
             if (!currentDate.isAfter(inputDate) && !currentDate.isSame(inputDate, 'day')) {
                 return res.status(400).json({ message: 'Date has not yet arrived or not a suitable format' });
             }
@@ -22,11 +19,11 @@ const addExerciseToDay = async (req, res, next) => {
             day = await Day.create({ date, owner, exercises: [], products: [] });
         }
 
-        day.exercises.push(exercise);
+        day.exercises.push({ exerciseId, duration, calories });
 
         await day.save();
 
-        res.status(201).json({ message: `Exercise added to the day ${date}`, exercise });
+        res.status(201).json({ message: `Exercise added to the day ${date}`, exerciseId });
     } catch (error) {
         console.error(error);
         throw HttpError(500, 'Error adding exercise to day');
@@ -35,7 +32,7 @@ const addExerciseToDay = async (req, res, next) => {
 
 const removeExercise = async (req, res, next) => {
     const { _id: owner } = req.user;
-    const { exerciseId, date = moment().format('YYYY-MM-DD') } = req.body;
+    const { exerciseId, date = moment().format('DD-MM-YYYY') } = req.body;
 
     const day = await Day.findOne({ date, owner });
 
