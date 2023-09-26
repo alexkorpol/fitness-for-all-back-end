@@ -67,12 +67,12 @@ const schemaAddProduct = Joi.object({
 
 const schemaRemoveExercise = Joi.object({
     date: Joi.string(),
-    exerciseId: Joi.string().required(),
+    exerciseToRemove: Joi.string().required(),
 });
 
 const schemaRemoveProduct = Joi.object({
     date: Joi.string(),
-    productId: Joi.string().required(),
+    productToRemove: Joi.string().required(),
 });
 
 module.exports = {
