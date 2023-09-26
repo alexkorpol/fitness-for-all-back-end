@@ -1,13 +1,13 @@
 const { Filter } = require("../../models");
+const HttpError = require("../../helpers/HttpError");
 
 const getAllEquipments = async (req, res) => {
-  const getEquipments = await Filter.find({ filter: "Equipment" });
-  if (!getEquipments) {
-    res.status(404).json({ message: "Not found" });
-    return;
+  const equipments = await Filter.find({ filter: "Equipment" });
+  if (!equipments) {
+    throw HttpError(404, "Not found");
   }
   res.status(200).json({
-    getEquipments,
+    equipments,
   });
 };
 

@@ -1,13 +1,13 @@
 const { Filter } = require("../../models");
+const HttpError = require("../../helpers/HttpError");
 
 const getBodyParts = async (req, res, next) => {
-  const getAllBodyParts = await Filter.find({ filter: "Body parts" });
-  if (!getAllBodyParts) {
-    res.status(404).json({ message: "Not found" });
-    return;
+  const allBodyParts = await Filter.find({ filter: "Body parts" });
+  if (!allBodyParts) {
+    throw HttpError(404, "Not found");
   }
   res.status(200).json({
-    getAllBodyParts,
+    allBodyParts,
   });
 };
 

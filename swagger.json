@@ -44,7 +44,7 @@
         "summary": "User registration",
         "parameters": [],
         "requestBody": {
-          "description": "Oпис параматрів запиту: **name** -string, ім'я користувача. **email**-string електронна пошта користувача. **password**-string зашифрований пароль має мітити 6 літер в різному регістрі і принаймні одну цифру та бути довжиною 7 символів.всі поля є обов'язковими. ",
+          "description": "Description of request parameters: **name** -string, username. **email**-string User's email. **password**-string encrypted password must contain 6 letters in different case and at least one number and be 7 characters long. all fields are mandatory",
           "required": true,
           "content": {
             "application/json": {
@@ -56,7 +56,7 @@
         },
         "responses": {
           "201": {
-            "description": "Oпис параматрів відповіді: **token**-string використовується для зберігання стану авторизації користувача в системі, дозволяє здийснювати захищені запити до API.Токен є довільним рядком символів і генерується при кожній новій авторизації коритувача.., **name**-string ім'я користувача, **email**-string  електронна пошта користувача",
+            "description": "Description of the response parameters: **token**-string is used to store the state of user authorization in the system, allows you to make protected requests to the API. The token is an arbitrary string of characters and is generated with each new authorization of the user.., **name**-string im. user's name, **email**-string user's e-mail",
             "content": {
               "application/json": {
                 "schema": {
@@ -88,7 +88,7 @@
         "summary": "User Login",
         "parameters": [],
         "requestBody": {
-          "description": " Опис параметрів запиту: **email**-string, required, улуктронна пошта користувача, обов'язковий параметр. **password**-string, required, зашифрований пароль користувача, обо'язковий параметр",
+          "description": "Description of request parameters: **email**-string, required, user's e-mail, mandatory parameter. **password**-string, required, encrypted user password, mandatory parameter",
           "required": true,
           "content": {
             "application/json": {
@@ -100,7 +100,7 @@
         },
         "responses": {
           "200": {
-            "description": "Oпис параматрів відповіді: **token**-string використовується для зберігання стану авторизації користувача в системі, дозволяє здийснювати захищені запити до API.Токен є довільним рядком символів і генерується при кожній новій авторизації коритувача..,  **email**-string  електронна пошта користувача",
+            "description": "Description of the response parameters: **token**-string is used to store the state of user authorization in the system, allows you to make protected requests to the API. The token is an arbitrary string of characters and is generated with each new authorization of the user.., **email**-string electronic user mail",
             "content": {
               "application/json": {
                 "schema": {
@@ -128,10 +128,10 @@
         "summary": "Get current user info",
         "parameters": [],
         "security": [{ "Bearer": [] }],
-        "description": " Ендпоінт current використовується для отримання інформації про поточного авторизованого користувача. Цей ендпоінт повертає об'єкт, який містить інформацію про користувача, таку як ім'я, електронна пошта, ідентифікатор користувача тощо.Параметри: відсутні. Опис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /api/auth/sign-out з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.",
+        "description": " The current endpoint is used to retrieve information about the current authorized user. This endpoint returns an object that contains user information such as name, email, user ID, etc. Parameters: None. Description: When a user clicks the logout button, it requests the URL /api/auth/sign-out with a valid token in the Authorization header. The server checks the validity of the token, if the token is valid, the user's session is closed, the token is removed and the user is returned to the login page. If the token is not valid, the server returns a 401 status and reports that the token is invalid.",
         "responses": {
           "200": {
-            "description": "JSON-об'єкт, який містить інформацію про поточного авторизованого користувача. Oпис параматрів відповіді:**id** - ObjectId, унікальний ідентифікатор користувача **name** - string, ім'я користувача. **email** - string, електронна пошта користувача.",
+            "description": "A JSON object that contains information about the current authorized user. Description of response parameters: **id** - ObjectId, unique user identifier **name** - string, user name. **email** - string, user's e-mail.",
             "content": {
               "application/json": {
                 "schema": {
@@ -160,7 +160,7 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Ендпоінт логауту - це механізм виходу з системи, який припиняє дію сесії користувача та знищує токен доступу, що був виданий при попередній аутентифікації.  Опис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /users/logout з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.",
+          "description": "The logout endpoint is a system exit mechanism that terminates the user's session and destroys the access token that was issued during the previous authentication. Description: When a user clicks the logout button, they request the URL /users/logout with a valid token in the Authorization header. The server checks the validity of the token, if the token is valid, the user's session is closed, the token is removed and the user is returned to the login page. If the token is not valid, the server returns a 401 status and reports that the token is invalid.",
           "required": true,
           "content": {
             "application/json": {
@@ -175,7 +175,7 @@
             "description": "User signed out - No Content"
           },
           "401": {
-            "description": "Bearer auth failed - невалідний токен - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "description": "Bearer auth failed - invalid token - If the request does not contain a valid token or the token has already expired, the server will return a response with HTTP status code 401 Unauthorized.",
             "content": {
               "application/json": {
                 "schema": {
@@ -316,11 +316,11 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Едпоінт який повертає всі існуючі в базі даних продукти"
+          "description": "Edpoint which returns all existing products in the database"
         },
         "responses": {
           "200": {
-            "description": "Повертає список продуктів",
+            "description": "Returns a list of products",
             "content": {
               "application/json": {
                 "schema": {
@@ -368,11 +368,11 @@
         ],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Приватний ендпоінт, який повертає авторизованому користувачу усі продукти, допустимі за типом його крові до вживання або навпаки заборонені."
+          "description": "A private endpoint that returns to the authorized user all the products that are allowed by his blood type to be consumed or, conversely, prohibited."
         },
         "responses": {
           "200": {
-            "description": "Повертає у відповіді: **groupBloodNotAllowed**- boolean, повертає true або false, **_id**- string, унікальний, **weight**- number, вага продуктів 100 граммів, **calories**- number,калорії в 100 грамах продукту, **title**- string, назва продукту, **category**- string,підкатегорія продуктів (риба, горішки і т.д.)",
+            "description": "Returns in response: **groupBloodNotAllowed**- boolean, returns true or false, **_id**- string, unique, **weight**- number, weight of products 100 grams, **calories**- number, calories in 100 grams of product, **title**- string, product name, **category**- string, subcategory of products (fish, nuts, etc.)",
             "content": {
               "application/json": {
                 "schema": {
@@ -398,14 +398,33 @@
       "get": {
         "tags": ["Exercise"],
         "summary": "Get all exercises",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "bodyPart",
+            "type": "string",
+            "example": "shoulders"
+          },
+          {
+            "in": "query",
+            "name": "equipment",
+            "type": "string",
+            "example": "cable"
+          },
+          {
+            "in": "query",
+            "name": "target",
+            "type": "string",
+            "example": "delts"
+          }
+        ],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Едпоінт який повертає всі існуючі в базі даних тренування"
+          "description": "Edpoint, which returns all existing workouts in the database"
         },
         "responses": {
           "200": {
-            "description": "Опис параметрів відповіді: **id** користувача, **bodyPart** - string, назва частини тіла для вправ, **equipment**-string назва обладнання для тренування, **gifUrl** - string  url адреса на відео тренування, **name**-string опис тренування, **target**-string обладнання для тренування, **burnedCalories**- number кількість витрачених калорій за тренування, **time** - number час виконання тренування",
+            "description": "Description of the response parameters: **id** of the user, **bodyPart** - string, the name of the body part for exercises, **equipment**-string the name of the training equipment, **gifUrl** - string url address of the training video, **name**-string training description, **target**-string equipment for training, **burnedCalories**- number the number of calories burned during training, **time** - number training time",
             "content": {
               "application/json": {
                 "schema": {
@@ -434,11 +453,11 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Едпоінт який повертає всі існуючі в базі даних частини тіла"
+          "description": "Edpoint which returns all existing body parts in the database"
         },
         "responses": {
           "200": {
-            "description": "Опис параметрів відповіді: **id** користувача, **filter** - string, фільтрація частин тіла, **name**-string назва частини тіла для тренування, **imgURL** - string  url адреса на картинку тренування в форматі jpg ",
+            "description": "Description of the response parameters: **id** of the user, **filter** - string, body parts filtering, **name**-string the name of the body part for training, **imgURL** - string url address to the image of the training in the format jpg ",
             "content": {
               "application/json": {
                 "schema": {
@@ -468,11 +487,11 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Едпоінт який повертає всі існуючі в базі даних М'язів"
+          "description": "Edpoint which returns all existing Muscles in the database"
         },
         "responses": {
           "200": {
-            "description": "Опис параметрів відповіді: **id** користувача, **filter** - string, фільтрація м'язів, **name**-string назва м'язів, **imgURL** - string  url адреса на картинку тренування м'язів в форматі jpg ",
+            "description": "Description of the response parameters: **id** of the user, **filter** - string, muscle filtering, **name**-string the name of the muscles, **imgURL** - string url address to the picture of muscle training yams in jpg format ",
             "content": {
               "application/json": {
                 "schema": {
@@ -502,11 +521,11 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Едпоінт який повертає всі існуючі в базі даних обладнання"
+          "description": "Edpoint which returns all existing equipment in the database"
         },
         "responses": {
           "200": {
-            "description": "Опис параметрів відповіді: **id** користувача, **filter** - string, фільтрація обладнання, **name**-string назва обладнання, **imgURL** - string  url адреса на картинку облпднання в форматі jpg ",
+            "description": "Description of the response parameters: **id** of the user, **filter** - string, equipment filtering, **name**-string the name of the equipment, **imgURL** - string url address to the image of the device in jpg format ",
             "content": {
               "application/json": {
                 "schema": {
