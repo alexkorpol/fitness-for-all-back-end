@@ -21,7 +21,6 @@ const addProductToDay = async (req, res, next) => {
         if (!day) {
             day = await Day.create({ date, owner, exercises: [], products: [] });
         }
-        console.log(day);
         day.products.push(product);
 
         await day.save();
