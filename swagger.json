@@ -669,7 +669,7 @@
             "name": "data",
             "type": "string",
             "description": "Select day",
-            "example": "26/09/2023"
+            "example": "27-09-2023"
           }
         ],
         "security": [{ "Bearer": [] }],
@@ -1489,35 +1489,82 @@
       "getDayResponse": {
         "type": "object",
         "properties": {
-          "_id": { "type": "string", "example": "65108cb20d9c1353b40f8b22" },
+          "_id": { "type": "string", "example": "6513d06d66070deb3372acee" },
           "date": {
             "type": "string",
             "description": "today's date or needed date",
-            "example": "26/09/2023"
+            "example": "27-09-2023"
           },
           "owner": {
             "type": "string",
             "description": "User's id",
-            "example": "651079ca40dd3530b59e126e"
+            "example": "65109b520c56c90080a01b02"
           },
           "exercises": {
             "type": "array",
             "description": "Exercises array",
             "items": {
               "type": "object",
-              "required": ["name", "duration", "_id"],
+              "required": ["exerciseId", "duration", "calories", "_id"],
               "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Run"
+                "exerciseId": {
+                  "type": "object",
+                  "required": [
+                    "_id",
+                    "bodyPart",
+                    "equipment",
+                    "gifUrl",
+                    "name",
+                    "target",
+                    "burnedCalories",
+                    "time"
+                  ],
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "65106b8c416b44a6d8e1e79b"
+                    },
+                    "bodyPart": {
+                      "type": "string",
+                      "example": "waist"
+                    },
+                    "equipment": {
+                      "type": "string",
+                      "example": "body weight"
+                    },
+                    "gifUrl": {
+                      "type": "string",
+                      "example": "https://res.cloudinary.com/dlxekrww0/image/upload/v1695551944/exercises/0001.gif"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "3/4 sit-up"
+                    },
+                    "target": {
+                      "type": "string",
+                      "example": "abs"
+                    },
+                    "burnedCalories": {
+                      "type": "integer",
+                      "example": 220
+                    },
+                    "time": {
+                      "type": "integer",
+                      "example": 3
+                    }
+                  }
                 },
                 "duration": {
                   "type": "integer",
                   "example": 30
                 },
+                "calories": {
+                  "type": "integer",
+                  "example": 1
+                },
                 "_id": {
                   "type": "string",
-                  "example": "65108cb20d9c1353b40f8b24"
+                  "example": "6513d06d66070deb3372acf0"
                 }
               }
             }
@@ -1527,11 +1574,53 @@
             "description": "Products array",
             "items": {
               "type": "object",
-              "required": ["name", "calories", "_id"],
+              "required": ["productId", "amount", "calories", "_id"],
               "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Pepsi"
+                "productId": {
+                  "type": "object",
+                  "required": [
+                    "groupBloodNotAllowed",
+                    "_id",
+                    "weight",
+                    "calories",
+                    "category",
+                    "title"
+                  ],
+                  "properties": {
+                    "groupBloodNotAllowed": {
+                      "type": "boolean",
+                      "example": {
+                        "1": false,
+                        "2": false,
+                        "3": false,
+                        "4": false
+                      }
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "5d51694902b2373622ff5a68"
+                    },
+                    "weight": {
+                      "type": "integer",
+                      "example": 100
+                    },
+                    "calories": {
+                      "type": "integer",
+                      "example": 25
+                    },
+                    "category": {
+                      "type": "string",
+                      "example": "fish"
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "Algae dals"
+                    }
+                  }
+                },
+                "amount": {
+                  "type": "integer",
+                  "example": 30
                 },
                 "calories": {
                   "type": "integer",
@@ -1539,7 +1628,7 @@
                 },
                 "_id": {
                   "type": "string",
-                  "example": "65108d3d0d9c1353b40f8b30"
+                  "example": "5d51694902b2373622ff5a68"
                 }
               }
             }
@@ -1558,157 +1647,116 @@
       },
       "Add Product": {
         "type": "object",
+        "required": ["productId", "amount", "calories"],
         "properties": {
           "date": {
             "type": "string",
             "required": false,
-            "description": "The default is today's date. Format DD/MM/YYYY",
-            "example": "26/09/2023"
+            "description": "The default is today's date. Format DD-MM-YYYY",
+            "example": "27-09-2023"
           },
-          "product": {
-            "type": "object",
-            "required": ["name", "amount", "calories"],
-            "properties": {
-              "name": {
-                "type": "string",
-                "example": "Pepsi"
-              },
-              "amount": {
-                "type ": "integer",
-                "example": "30",
-                "description": "minimum 1"
-              },
-              "calories": {
-                "type ": "integer",
-                "example": "100",
-                "description": "minimum 1"
-              }
-            }
+          "productId": {
+            "type": "string",
+            "description": "Product's id",
+            "example": "5d51694902b2373622ff5a68"
+          },
+          "amount": {
+            "type ": "integer",
+            "example": "30",
+            "description": "minimum 1"
+          },
+          "calories": {
+            "type ": "integer",
+            "example": "100",
+            "description": "minimum 1"
           }
         }
       },
       "Add Exercise": {
         "type": "object",
+        "required": ["exerciseId", "duration", "calories"],
         "properties": {
           "date": {
             "type": "string",
             "required": false,
-            "description": "The default is today's date. Format DD/MM/YYYY",
-            "example": "26/09/2023"
+            "description": "The default is today's date. Format DD-MM-YYYY",
+            "example": "27-09-2023"
           },
-          "exercise": {
-            "type": "object",
-            "required": ["name", "duration", "calories"],
-            "properties": {
-              "name": {
-                "type": "string",
-                "example": "Run"
-              },
-              "duration": {
-                "type ": "integer",
-                "example": "30",
-                "description": "minimum 1"
-              },
-              "calories": {
-                "type ": "integer",
-                "example": "100",
-                "description": "minimum 1"
-              }
-            }
+          "exerciseId": {
+            "type": "string",
+            "description": "Exercise's id",
+            "example": "65106b8c416b44a6d8e1e7ab"
+          },
+          "duration": {
+            "type ": "integer",
+            "example": "30",
+            "description": "minimum 1"
+          },
+          "calories": {
+            "type ": "integer",
+            "example": "100",
+            "description": "minimum 1"
           }
         }
       },
       "ExerciseIsAdded": {
         "type": "object",
-        "required": ["name", "duration", "calories"],
         "properties": {
           "message": {
             "type": "string",
-            "example": "Exercise added to the day 26/09/2023"
+            "example": "Exercise added to the day 27-09-2023"
           },
-          "exercise": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "required": true,
-                "example": "Run"
-              },
-              "duration": {
-                "type ": "integer",
-                "required": true,
-                "example": "30",
-                "description": "minimum 1"
-              },
-              "calories": {
-                "type ": "integer",
-                "required": true,
-                "example": "100",
-                "description": "minimum 1"
-              }
-            }
+          "exerciseId": {
+            "type": "string",
+            "required": true,
+            "example": "65106b8c416b44a6d8e1e7ab"
           }
         }
       },
       "ProductIsAdded": {
         "type": "object",
-        "required": ["name", "amount", "calories"],
         "properties": {
           "message": {
             "type": "string",
-            "example": "Product added to the day 26/09/2023"
+            "example": "Product added to the day 27-09-2023"
           },
-          "product": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "example": "Pepsi"
-              },
-              "amount": {
-                "type ": "integer",
-                "example": "30",
-                "description": "minimum 1"
-              },
-              "calories": {
-                "type ": "integer",
-                "example": "100",
-                "description": "minimum 1"
-              }
-            }
+          "exerciseId": {
+            "type": "string",
+            "required": true,
+            "example": "5d51694902b2373622ff5a68"
           }
         }
       },
       "RemoveProduct": {
         "type": "object",
-        "required": ["productId"],
+        "required": ["productToRemove"],
         "properties": {
           "date": {
             "type": "string",
             "required": false,
-            "description": "The default is today's date. Format DD/MM/YYYY",
-            "example": "26/09/2023"
+            "description": "The default is today's date. Format DD-MM-YYYY",
+            "example": "27-09-2023"
           },
-          "productId": {
+          "productToRemove": {
             "type": "string",
-            "example": "65108d3d0d9c1353b40f8b30"
+            "example": "5d51694902b2373622ff5a68"
           }
         }
       },
       "RemoveExercise": {
         "type": "object",
-        "required": ["productId"],
+        "required": ["exerciseToRemove"],
 
         "properties": {
           "date": {
             "type": "string",
             "required": false,
-            "description": "The default is today's date. Format DD/MM/YYYY",
-            "example": "26/09/2023"
+            "description": "The default is today's date. Format DD-MM-YYYY",
+            "example": "27-09-2023"
           },
-          "exerciseId": {
+          "exerciseToRemove": {
             "type": "string",
-            "example": "65108cb20d9c1353b40f8b24"
+            "example": "65106b8c416b44a6d8e1e7ab"
           }
         }
       },
