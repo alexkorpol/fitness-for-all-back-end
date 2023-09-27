@@ -659,15 +659,18 @@
         }
       }
     },
-    "/diary": {
+    "/diary/{date}": {
       "get": {
         "tags": ["Diary"],
         "summary": "Get all activities per day. Default is today date",
         "parameters": [
           {
-            "in": "query",
-            "name": "data",
-            "type": "string",
+            "in": "path",
+            "name": "date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
             "description": "Select day",
             "example": "27-09-2023"
           }
